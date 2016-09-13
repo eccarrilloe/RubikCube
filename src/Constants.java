@@ -44,4 +44,10 @@ public interface Constants {
 	public static final int DIR_RIGHT = 2;
 	public static final int DIR_DOWN  = 3;
 
+	// Rows & Columns
+	public static final int ROW_TOP = 0;
+	public static final int COL_LEFT = 1;
+	public static final int COL_RIGHT = 2;
+	public static final int ROW_BOTTOM = 3;
+
 }

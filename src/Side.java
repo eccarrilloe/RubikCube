@@ -28,6 +28,22 @@ public class Side implements Constants {
     tokens[x][y].color = color;
   }
 
+  public Token[] getRow(int ) {
+
+  }
+
+  public void setRow(Token[] other) {
+
+  }
+
+  public Token[] getColumn() {
+
+  }
+
+  public void setColumn(Token[] other) {
+
+  }
+
   public void rotate(int direction) {
     if (direction == DIR_LEFT) {
 
