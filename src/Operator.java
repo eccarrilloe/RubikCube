@@ -19,12 +19,41 @@ public class Operator implements Constants {
 
   }
 
-  public void disarm() {
+  public void disarm(int operations) {
 
   }
 
-  public void rotate(Side side) {
-
+  public void operate(int operation, int direction) {
+    Token[] tmp = new Token[3];
+    switch (operation) {
+      case ROTATE_FRONT:
+        if (direction == DIR_RIGHT) {
+          this.cube.frontSide.rotate(DIR_RIGHT);
+          tmp = this.cube.topSide.getRow(ROW_BOTTOM);
+          this.cube.topSide.setRow(ROW_BOTTOM, this.cube.leftSide.getColumn(COL_RIGHT), true);
+          this.cube.leftSide.setColumn(COL_RIGHT, this.cube.bottomSide.getRow(ROW_TOP), false);
+          this.cube.bottomSide.setRow(ROW_TOP, this.cube.rightSide.getColumn(COL_LEFT), true);
+          this.cube.rightSide.setRow(COL_LEFT, tmp, false);
+        } else {
+          this.cube.frontSide.rotate(DIR_LEFT);
+          tmp = this.cube.topSide.getRow(ROW_BOTTOM);
+          this.cube.topSide.setRow(ROW_BOTTOM, this.cube.rightSide.getColumn(COL_LEFT), false);
+          this.cube.rightSide.setRow(COL_LEFT, this.cube.bottomSide.getColumn(ROW_TOP), true);
+          this.cube.bottomSide.setRow(ROW_TOP, this.cube.leftSide.getColumn(COL_RIGHT), false);
+          this.cube.leftSide.setColumn(COL_RIGHT, tmp, true);
+        }
+        break;
+      case ROTATE_BACK:
+        break;
+      case ROW_TOP:
+        break;
+      case ROW_BOTTOM:
+        break;
+      case COL_LEFT:
+        break;
+      case COL_RIGHT:
+        break;
+    }
   }
 
   public boolean validate() {

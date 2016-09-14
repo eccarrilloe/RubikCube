@@ -28,20 +28,40 @@ public class Side implements Constants {
     tokens[x][y].color = color;
   }
 
-  public Token[] getRow(int ) {
-
+  public Token[] getRow(int row) {
+    Token[] tokens = new Token[3];
+    tokens[0] = this.tokens[row][0];
+    tokens[1] = this.tokens[row][1];
+    tokens[2] = this.tokens[row][2];
+    return tokens;
   }
 
-  public void setRow(Token[] other) {
+  public void setRow(int row, Token[] tokens, boolean reverse = false) {
+    if (reverse) {
+      tokens = ArrayUtils.reverse(tokens);
+    }
 
+    this.tokens[row][0] = tokens[0];
+    this.tokens[row][1] = tokens[1];
+    this.tokens[row][2] = tokens[2];
   }
 
-  public Token[] getColumn() {
-
+  public Token[] getColumn(int column) {
+    Token[] tokens = new Token[3];
+    tokens[0] = this.tokens[0][column];
+    tokens[1] = this.tokens[1][column];
+    tokens[2] = this.tokens[2][column];
+    return tokens;
   }
 
-  public void setColumn(Token[] other) {
+  public void setColumn(int column, Token[] tokens, boolean reverse = false) {
+    if (reverse) {
+      tokens = ArrayUtils.reverse(tokens);
+    }
 
+    this.tokens[0][column] = tokens[0];
+    this.tokens[1][column] = tokens[1];
+    this.tokens[2][column] = tokens[2];
   }
 
   public void rotate(int direction) {

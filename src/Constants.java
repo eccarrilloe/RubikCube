@@ -44,10 +44,12 @@ public interface Constants {
 	public static final int DIR_RIGHT = 2;
 	public static final int DIR_DOWN  = 3;
 
-	// Rows & Columns
+	// Operations
+	public static final int ROTATE_FRONT = 3;
+	public static final int ROTATE_BACK = 4;
 	public static final int ROW_TOP = 0;
-	public static final int COL_LEFT = 1;
+	public static final int ROW_BOTTOM = 2;
+	public static final int COL_LEFT = 0;
 	public static final int COL_RIGHT = 2;
-	public static final int ROW_BOTTOM = 3;
 
 }
