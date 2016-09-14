@@ -26,7 +26,7 @@ public class Operator implements Constants {
   public void operate(int operation, int direction) {
     Token[] tmp = new Token[3];
     switch (operation) {
-      case ROTATE_FRONT:
+      case OP_ROTATE_FRONT:
         if (direction == DIR_RIGHT) {
           this.cube.frontSide.rotate(DIR_RIGHT);
           tmp = this.cube.topSide.getRow(ROW_BOTTOM);
@@ -43,7 +43,7 @@ public class Operator implements Constants {
           this.cube.leftSide.setColumn(COL_RIGHT, tmp, true);
         }
         break;
-      case ROTATE_BACK:
+      case OP_ROTATE_BACK:
         if (direction == DIR_RIGHT) {
           this.cube.frontSide.rotate(DIR_RIGHT);
           tmp = this.cube.topSide.getRow(ROW_BOTTOM);
@@ -60,13 +60,13 @@ public class Operator implements Constants {
           this.cube.leftSide.setColumn(COL_RIGHT, tmp, true);
       }
         break;
-      case ROW_TOP:
+      case OP_ROW_TOP:
         break;
-      case ROW_BOTTOM:
+      case OP_ROW_BOTTOM:
         break;
-      case COL_LEFT:
+      case OP_COL_LEFT:
         break;
-      case COL_RIGHT:
+      case OP_COL_RIGHT:
         break;
     }
   }

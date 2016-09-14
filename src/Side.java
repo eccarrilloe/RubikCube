@@ -36,9 +36,11 @@ public class Side implements Constants {
     return tokens;
   }
 
-  public void setRow(int row, Token[] tokens, boolean reverse = false) {
-    if (reverse) {
-      tokens = ArrayUtils.reverse(tokens);
+  public void setRow(int row, Token[] tokens, boolean reverse) {
+    if (reverse == true) {
+      Token tmp = new Token(tokens[0]);
+      tokens[0] = tokens[2];
+      tokens[2] = tmp;
     }
 
     this.tokens[row][0] = tokens[0];
@@ -54,9 +56,11 @@ public class Side implements Constants {
     return tokens;
   }
 
-  public void setColumn(int column, Token[] tokens, boolean reverse = false) {
-    if (reverse) {
-      tokens = ArrayUtils.reverse(tokens);
+  public void setColumn(int column, Token[] tokens, boolean reverse) {
+    if (reverse == true) {
+      Token tmp = new Token(tokens[0]);
+      tokens[0] = tokens[2];
+      tokens[2] = tmp;
     }
 
     this.tokens[0][column] = tokens[0];
