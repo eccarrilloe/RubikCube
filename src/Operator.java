@@ -78,6 +78,21 @@ public class Operator implements Constants {
       }
       break;
       case ROW_BOTTOM:
+      if (direction == DIR_RIGHT) {
+        this.cube.bottomSide.rotate(DIR_RIGHT);
+        tmp = this.cube.frontSide.getRow(ROW_BOTTOM);
+        this.cube.frontSide.setRow(ROW_BOTTOM, this.cube.leftSide.getRow(ROW_BOTTOM), false);
+        this.cube.leftSide.setRow(ROW_BOTTOM, this.cube.backSide.getRow(ROW_BOTTOM), false);
+        this.cube.backSide.setRow(ROW_BOTTOM,this.cube.rightSide.getRow(ROW_BOTTOM), false);
+        this.cube.rightSide.setRow(ROW_BOTTOM, tmp, false);
+      } else {
+        this.cube.bottomSide.rotate(DIR_LEFT);
+        tmp = this.cube.frontSide.getRow(ROW_BOTTOM);
+        this.cube.frontSide.setRow(ROW_BOTTOM, this.cube.rightSide.getRow(ROW_BOTTOM), false);
+        this.cube.rightSide.setRow(ROW_BOTTOM, this.cube.backSide.getRow(ROW_BOTTOM), false);
+        this.cube.backSide.setRow(ROW_BOTTOM, this.cube.leftSide.getRow(ROW_BOTTOM), false);
+        this.cube.leftSide.setRow(ROW_BOTTOM, tmp, false);
+      }
         break;
     /*  case COL_LEFT:
         break;
@@ -95,7 +110,7 @@ public class Operator implements Constants {
     Operator op = new Operator(cb);
 
     System.out.println(cb);
-    op.operate(ROW_TOP, DIR_LEFT);
+    op.operate(ROW_BOTTOM, DIR_RIGHT);
     System.out.println("************************");
     System.out.println(cb);
   }
