@@ -33,6 +33,13 @@ public class Cube implements Constants {
 
   @Override
   public String toString() {
+    this.frontSide.printSide();
+    this.rightSide.printSide();
+    this.leftSide.printSide();
+    this.topSide.printSide();
+    this.bottomSide.printSide();
+    this.backSide.printSide();
+
     return "";
   }
 

@@ -26,7 +26,7 @@ public class Operator implements Constants {
   public void operate(int operation, int direction) {
     Token[] tmp = new Token[3];
     switch (operation) {
-      case OP_ROTATE_FRONT:
+      case ROTATE_FRONT:
         if (direction == DIR_RIGHT) {
           this.cube.frontSide.rotate(DIR_RIGHT);
           tmp = this.cube.topSide.getRow(ROW_BOTTOM);
@@ -43,7 +43,7 @@ public class Operator implements Constants {
           this.cube.leftSide.setColumn(COL_RIGHT, tmp, true);
         }
         break;
-      case OP_ROTATE_BACK:
+      case ROTATE_BACK:
         if (direction == DIR_RIGHT) {
           this.cube.frontSide.rotate(DIR_RIGHT);
           tmp = this.cube.topSide.getRow(ROW_BOTTOM);
@@ -59,15 +59,30 @@ public class Operator implements Constants {
           this.cube.bottomSide.setRow(ROW_TOP, this.cube.leftSide.getColumn(COL_RIGHT), false);
           this.cube.leftSide.setColumn(COL_RIGHT, tmp, true);
       }
+      break;
+      case ROW_TOP:
+      if (direction == DIR_RIGHT) {
+        this.cube.topSide.rotate(DIR_RIGHT);
+        tmp = this.cube.frontSide.getRow(ROW_TOP);
+        this.cube.frontSide.setRow(ROW_TOP, this.cube.leftSide.getRow(ROW_TOP), false);
+        this.cube.leftSide.setRow(ROW_TOP, this.cube.backSide.getRow(ROW_TOP), false);
+        this.cube.backSide.setRow(ROW_TOP, this.cube.rightSide.getRow(ROW_TOP), false);
+        this.cube.rightSide.setRow(ROW_TOP, tmp, false);
+      } else {
+        this.cube.topSide.rotate(DIR_LEFT);
+        tmp = this.cube.frontSide.getRow(ROW_TOP);
+        this.cube.frontSide.setRow(ROW_TOP, this.cube.rightSide.getRow(ROW_TOP), false);
+        this.cube.rightSide.setRow(ROW_TOP, this.cube.backSide.getRow(ROW_TOP), false);
+        this.cube.backSide.setRow(ROW_TOP, this.cube.leftSide.getRow(ROW_TOP), false);
+        this.cube.leftSide.setRow(ROW_TOP, tmp, false);
+      }
+      break;
+      case ROW_BOTTOM:
         break;
-      case OP_ROW_TOP:
+    /*  case COL_LEFT:
         break;
-      case OP_ROW_BOTTOM:
-        break;
-      case OP_COL_LEFT:
-        break;
-      case OP_COL_RIGHT:
-        break;
+      case COL_RIGHT:
+        break;*/
     }
   }
 
@@ -79,13 +94,9 @@ public class Operator implements Constants {
     Cube cb = new Cube();
     Operator op = new Operator(cb);
 
-    cb.frontSide.setToken(0, 0, BLUE);
-    cb.frontSide.setToken(2, 2, RED);
-    cb.frontSide.setToken(0, 1, GREEN);
-    cb.frontSide.setToken(2, 1, YELLOW);
-
-    cb.frontSide.printSide();
-    cb.frontSide.rotate(DIR_RIGHT);
-    cb.frontSide.printSide();
+    System.out.println(cb);
+    op.operate(ROW_TOP, DIR_LEFT);
+    System.out.println("************************");
+    System.out.println(cb);
   }
 }
