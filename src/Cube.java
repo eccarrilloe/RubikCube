@@ -6,6 +6,7 @@
 
 public class Cube implements Constants {
 
+  public int level;
   public Side frontSide;
   public Side rightSide;
   public Side leftSide;
@@ -14,12 +15,12 @@ public class Cube implements Constants {
   public Side backSide;
 
   public Cube() {
-    this.frontSide  = new Side(FRONT, WHITE);
-    this.rightSide  = new Side(RIGHT, GREEN);
-    this.leftSide   = new Side(LEFT, BLUE);
-    this.topSide    = new Side(TOP, RED);
-    this.bottomSide = new Side(BOTTOM, ORANGE);
-    this.backSide   = new Side(BACK, YELLOW);
+    this.frontSide  = new Side(WHITE);
+    this.rightSide  = new Side(GREEN);
+    this.leftSide   = new Side(BLUE);
+    this.topSide    = new Side(RED);
+    this.bottomSide = new Side(ORANGE);
+    this.backSide   = new Side(YELLOW);
   }
 
   public Cube(Side frontSide, Side rightSide, Side leftSide, Side topSide, Side bottomSide, Side backSide) {
@@ -33,12 +34,11 @@ public class Cube implements Constants {
 
   @Override
   public String toString() {
-    this.frontSide.printSide();
-    this.rightSide.printSide();
-    this.leftSide.printSide();
-    this.topSide.printSide();
-    this.bottomSide.printSide();
-    this.backSide.printSide();
+    String s = "";
+    String offSet = "      ";
+    int[] firstRow = this.topSide.getRow(ROW_TOP);
+
+
 
     return "";
   }

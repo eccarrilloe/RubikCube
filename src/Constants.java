@@ -32,7 +32,7 @@ public interface Constants {
 
 	// Name of Sides
 	public static final String C_FRONT  = "FRONT";
-	public static final String C_BACK   = "BACk";
+	public static final String C_BACK   = "BACK";
 	public static final String C_LEFT   = "LEFT";
 	public static final String C_RIGHT  = "RIGHT";
 	public static final String C_TOP    = "TOP";
@@ -46,8 +46,10 @@ public interface Constants {
 
 	// Operations
 	public static final int ROW_TOP    = 0;
+	public static final int ROW_MIDDLE = 1;
 	public static final int ROW_BOTTOM = 2;
 	public static final int COL_LEFT   = 0;
+	public static final int COL_MIDDLE = 1;
 	public static final int COL_RIGHT  = 2;
 
 	public static final int OP_ROTATE_FRONT = 1;

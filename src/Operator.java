@@ -24,7 +24,7 @@ public class Operator implements Constants {
   }
 
   public void operate(int operation, int direction) {
-    Token[] tmp = new Token[3];
+    int[] tmp = new int[3];
     switch (operation) {
       case OP_ROTATE_FRONT:
         if (direction == DIR_RIGHT) {
