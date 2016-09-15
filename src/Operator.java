@@ -70,36 +70,36 @@ public class Operator implements Constants {
     switch (operation) {
       case OP_ROTATE_FRONT:
         if (direction == DIR_RIGHT) {
-          this.cube.frontSide.rotate(DIR_RIGHT);
+          this.cube.frontSide.rotate(DIR_RIGHT);//ok
           tmp = this.cube.topSide.getRow(ROW_BOTTOM);
-          this.cube.topSide.setRow(ROW_BOTTOM, this.cube.leftSide.getColumn(COL_RIGHT), true);
-          this.cube.leftSide.setColumn(COL_RIGHT, this.cube.bottomSide.getRow(ROW_TOP), false);
-          this.cube.bottomSide.setRow(ROW_TOP, this.cube.rightSide.getColumn(COL_LEFT), true);
-          this.cube.rightSide.setColumn(COL_LEFT, tmp, false);
+          this.cube.topSide.setRow(ROW_BOTTOM, this.cube.leftSide.getColumn(COL_RIGHT), true);//ok
+          this.cube.leftSide.setColumn(COL_RIGHT, this.cube.bottomSide.getRow(ROW_TOP), false);//ok
+          this.cube.bottomSide.setRow(ROW_TOP, this.cube.rightSide.getColumn(COL_LEFT), true);//ok
+          this.cube.rightSide.setColumn(COL_LEFT, tmp, false);//ok
         } else {
-          this.cube.frontSide.rotate(DIR_LEFT);
-          tmp = this.cube.topSide.getRow(ROW_BOTTOM);
-          this.cube.topSide.setRow(ROW_BOTTOM, this.cube.rightSide.getColumn(COL_LEFT), false);
-          this.cube.rightSide.setRow(COL_LEFT, this.cube.bottomSide.getColumn(ROW_TOP), true);
-          this.cube.bottomSide.setRow(ROW_TOP, this.cube.leftSide.getColumn(COL_RIGHT), false);
-          this.cube.leftSide.setColumn(COL_RIGHT, tmp, true);
+          this.cube.frontSide.rotate(DIR_LEFT);//ok
+          tmp = this.cube.topSide.getRow(ROW_BOTTOM);//ok tmp
+          this.cube.topSide.setRow(ROW_BOTTOM, this.cube.rightSide.getColumn(COL_LEFT), false);//ok
+          this.cube.rightSide.setColumn(COL_LEFT, this.cube.bottomSide.getRow(ROW_TOP), true);//ok now.
+          this.cube.bottomSide.setRow(ROW_TOP, this.cube.leftSide.getColumn(COL_RIGHT), false);//ok
+          this.cube.leftSide.setColumn(COL_RIGHT, tmp, true);//ok
         }
         break;
       case OP_ROTATE_BACK:
         if (direction == DIR_RIGHT) {
-          this.cube.frontSide.rotate(DIR_RIGHT);
-          tmp = this.cube.topSide.getRow(ROW_BOTTOM);
-          this.cube.topSide.setRow(ROW_BOTTOM, this.cube.leftSide.getColumn(COL_RIGHT), true);
-          this.cube.leftSide.setColumn(COL_RIGHT, this.cube.bottomSide.getRow(ROW_TOP), false);
-          this.cube.bottomSide.setRow(ROW_TOP, this.cube.rightSide.getColumn(COL_LEFT), true);
-          this.cube.rightSide.setColumn(COL_LEFT, tmp, false);
+          this.cube.backSide.rotate(DIR_RIGHT);
+          tmp = this.cube.topSide.getRow(ROW_TOP);
+          this.cube.topSide.setRow(ROW_TOP, this.cube.leftSide.getColumn(COL_LEFT), true);
+          this.cube.leftSide.setColumn(COL_LEFT, this.cube.bottomSide.getRow(ROW_BOTTOM), false);
+          this.cube.bottomSide.setRow(ROW_BOTTOM, this.cube.rightSide.getColumn(COL_RIGHT), true);
+          this.cube.rightSide.setColumn(COL_RIGHT, tmp, false);
           } else {
-          this.cube.frontSide.rotate(DIR_LEFT);
-          tmp = this.cube.topSide.getRow(ROW_BOTTOM);
-          this.cube.topSide.setRow(ROW_BOTTOM, this.cube.rightSide.getColumn(COL_LEFT), false);
-          this.cube.rightSide.setRow(COL_LEFT, this.cube.bottomSide.getColumn(ROW_TOP), true);
-          this.cube.bottomSide.setRow(ROW_TOP, this.cube.leftSide.getColumn(COL_RIGHT), false);
-          this.cube.leftSide.setColumn(COL_RIGHT, tmp, true);
+          this.cube.backSide.rotate(DIR_LEFT);
+          tmp = this.cube.topSide.getRow(ROW_TOP);
+          this.cube.topSide.setRow(ROW_TOP, this.cube.rightSide.getColumn(COL_LEFT), true);
+          this.cube.rightSide.setColumn(COL_LEFT, this.cube.bottomSide.getRow(ROW_BOTTOM), false);
+          this.cube.bottomSide.setRow(ROW_BOTTOM, this.cube.leftSide.getColumn(COL_RIGHT), true);
+          this.cube.leftSide.setColumn(COL_RIGHT, tmp, false);
         }
         break;
       case OP_ROW_TOP:
@@ -139,35 +139,35 @@ public class Operator implements Constants {
       case OP_COL_LEFT:
         if (direction == DIR_UP) {
           this.cube.leftSide.rotate(DIR_LEFT);
-          tmp = this.cube.frontSide.getRow(COL_LEFT);
-          this.cube.frontSide.setRow(COL_LEFT, this.cube.bottomSide.getColumn(COL_LEFT), false);
-          this.cube.bottomSide.setRow(COL_LEFT, this.cube.backSide.getColumn(COL_RIGHT), true);
-          this.cube.backSide.setRow(COL_RIGHT, this.cube.topSide.getColumn(COL_LEFT), true);
-          this.cube.topSide.setRow(COL_LEFT, tmp, false);
+          tmp = this.cube.frontSide.getColumn(COL_LEFT);
+          this.cube.frontSide.setColumn(COL_LEFT, this.cube.bottomSide.getColumn(COL_LEFT), false);
+          this.cube.bottomSide.setColumn(COL_LEFT, this.cube.backSide.getColumn(COL_RIGHT), true);
+          this.cube.backSide.setColumn(COL_RIGHT, this.cube.topSide.getColumn(COL_LEFT), true);
+          this.cube.topSide.setColumn(COL_LEFT, tmp, false);
         } else {
           this.cube.leftSide.rotate(DIR_RIGHT);
-          tmp = this.cube.frontSide.getRow(COL_LEFT);
-          this.cube.frontSide.setRow(COL_LEFT, this.cube.topSide.getColumn(COL_LEFT), false);
-          this.cube.topSide.setRow(COL_LEFT, this.cube.backSide.getColumn(COL_RIGHT), true);
-          this.cube.backSide.setRow(COL_RIGHT, this.cube.bottomSide.getColumn(COL_LEFT), true);
-          this.cube.bottomSide.setRow(COL_LEFT, tmp, false);
+          tmp = this.cube.frontSide.getColumn(COL_LEFT);
+          this.cube.frontSide.setColumn(COL_LEFT, this.cube.topSide.getColumn(COL_LEFT), false);
+          this.cube.topSide.setColumn(COL_LEFT, this.cube.backSide.getColumn(COL_RIGHT), true);
+          this.cube.backSide.setColumn(COL_RIGHT, this.cube.bottomSide.getColumn(COL_LEFT), true);
+          this.cube.bottomSide.setColumn(COL_LEFT, tmp, false);
         }
         break;
       case OP_COL_RIGHT:
         if (direction == DIR_UP) {
           this.cube.rightSide.rotate(DIR_RIGHT);
-          tmp = this.cube.frontSide.getRow(COL_RIGHT);
-          this.cube.frontSide.setRow(COL_RIGHT, this.cube.bottomSide.getColumn(COL_RIGHT), false);
-          this.cube.bottomSide.setRow(COL_RIGHT, this.cube.backSide.getColumn(COL_LEFT), true);
-          this.cube.backSide.setRow(COL_LEFT, this.cube.topSide.getColumn(COL_RIGHT), true);
-          this.cube.topSide.setRow(COL_LEFT, tmp, false);
-        } else {
+          tmp = this.cube.frontSide.getColumn(COL_RIGHT);
+          this.cube.frontSide.setColumn(COL_RIGHT, this.cube.bottomSide.getColumn(COL_RIGHT), false);
+          this.cube.bottomSide.setColumn(COL_RIGHT, this.cube.backSide.getColumn(COL_LEFT), true);
+          this.cube.backSide.setColumn(COL_LEFT, this.cube.topSide.getColumn(COL_RIGHT), true);
+          this.cube.topSide.setColumn(COL_RIGHT, tmp, false);
+        } else{
           this.cube.rightSide.rotate(DIR_LEFT);
-          tmp = this.cube.frontSide.getRow(COL_RIGHT);
-          this.cube.frontSide.setRow(COL_RIGHT, this.cube.topSide.getColumn(COL_RIGHT), false);
-          this.cube.topSide.setRow(COL_RIGHT, this.cube.backSide.getColumn(COL_LEFT), true);
-          this.cube.backSide.setRow(COL_LEFT, this.cube.bottomSide.getColumn(COL_RIGHT), true);
-          this.cube.bottomSide.setRow(COL_RIGHT, tmp, false);
+          tmp = this.cube.frontSide.getColumn(COL_RIGHT);
+          this.cube.frontSide.setColumn(COL_RIGHT, this.cube.topSide.getColumn(COL_RIGHT), false);
+          this.cube.topSide.setColumn(COL_RIGHT, this.cube.backSide.getColumn(COL_LEFT), true);
+          this.cube.backSide.setColumn(COL_LEFT, this.cube.bottomSide.getColumn(COL_RIGHT), true);
+          this.cube.bottomSide.setColumn(COL_RIGHT, tmp, false);
         }
         break;
       default: break;
@@ -186,8 +186,10 @@ public class Operator implements Constants {
 
   public static void main(String[] args) {
     Operator op = new Operator();
-    System.out.println(op.cube);
-    op.disarm(15);
+    //System.out.println(op.cube);
+    //op.disarm(15);
+    op.operate(OP_ROTATE_FRONT,DIR_RIGHT);
+
     System.out.println(op.cube);
   }
 }

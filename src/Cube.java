@@ -66,28 +66,28 @@ public class Cube implements Constants {
     String s = "";
     String offSet = "        ";
     //TopSide
-    s = s + offSet + getRowString(this.topSide.getRow(0)) + "\n";
-    s = s + offSet + getRowString(this.topSide.getRow(1)) + "\n";
-    s = s + offSet + getRowString(this.topSide.getRow(2)) + "\n";
+    s = s + offSet + this.getRowString(this.topSide.getRow(0)) + "\n";
+    s = s + offSet + this.getRowString(this.topSide.getRow(1)) + "\n";
+    s = s + offSet + this.getRowString(this.topSide.getRow(2)) + "\n";
     s = s + offSet + "* * *" + "\n";
-    s = s + getRowString(this.leftSide.getRow(0)) + " * ";
-    s = s + getRowString(this.frontSide.getRow(0)) + " * ";
-    s = s + getRowString(this.rightSide.getRow(0)) + " * ";
-    s = s + getRowString(this.backSide.getRow(0)) + "\n";
+    s = s + this.getRowString(this.leftSide.getRow(0)) + " * ";
+    s = s + this.getRowString(this.frontSide.getRow(0)) + " * ";
+    s = s + this.getRowString(this.rightSide.getRow(0)) + " * ";
+    s = s + this.getRowString(this.backSide.getRow(0)) + "\n";
 
-    s = s + getRowString(this.leftSide.getRow(1)) + " * ";
-    s = s + getRowString(this.frontSide.getRow(1)) + " * ";
-    s = s + getRowString(this.rightSide.getRow(1)) + " * ";
-    s = s + getRowString(this.backSide.getRow(1)) + "\n";
+    s = s + this.getRowString(this.leftSide.getRow(1)) + " * ";
+    s = s + this.getRowString(this.frontSide.getRow(1)) + " * ";
+    s = s + this.getRowString(this.rightSide.getRow(1)) + " * ";
+    s = s + this.getRowString(this.backSide.getRow(1)) + "\n";
 
-    s = s + getRowString(this.leftSide.getRow(2)) + " * ";
-    s = s + getRowString(this.frontSide.getRow(2)) + " * ";
-    s = s + getRowString(this.rightSide.getRow(2)) + " * ";
-    s = s + getRowString(this.backSide.getRow(2)) + "\n";
+    s = s + this.getRowString(this.leftSide.getRow(2)) + " * ";
+    s = s + this.getRowString(this.frontSide.getRow(2)) + " * ";
+    s = s + this.getRowString(this.rightSide.getRow(2)) + " * ";
+    s = s + this.getRowString(this.backSide.getRow(2)) + "\n";
     s = s + offSet + "* * *" + "\n";
-    s = s + offSet + getRowString(this.bottomSide.getRow(0)) + "\n";
-    s = s + offSet + getRowString(this.bottomSide.getRow(1)) + "\n";
-    s = s + offSet + getRowString(this.bottomSide.getRow(2)) + "\n";
+    s = s + offSet + this.getRowString(this.bottomSide.getRow(0)) + "\n";
+    s = s + offSet + this.getRowString(this.bottomSide.getRow(1)) + "\n";
+    s = s + offSet + this.getRowString(this.bottomSide.getRow(2)) + "\n";
 
     return s;
   }
