@@ -91,4 +91,19 @@ public class Cube implements Constants {
 
     return s;
   }
+
+  @Override
+  public boolean equals(Object other) {
+    if (other == null) return false;
+    if (other == this) return true;
+    if (!(other instanceof Cube)) return false;
+    Cube ot = (Cube) other;
+    boolean equal = this.frontSide.equals(ot.frontSide);
+    equal = equal && this.topSide.equals(ot.topSide);
+    equal = equal && this.leftSide.equals(ot.leftSide);
+    equal = equal && this.rightSide.equals(ot.rightSide);
+    equal = equal && this.bottomSide.equals(ot.bottomSide);
+    equal = equal && this.backSide.equals(ot.backSide);
+    return equal;
+  }
 }

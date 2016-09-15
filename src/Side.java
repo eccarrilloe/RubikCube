@@ -109,4 +109,16 @@ public class Side implements Constants {
 
     }
   }
+  @Override
+  public boolean equals(Object other) {
+    if (other == null) return false;
+    if (other == this) return true;
+    if (!(other instanceof Side)) return false;
+    Side ot = (Side) other;
+    boolean equal = true;
+    for (int i = 0; i < 3; i++)
+      for(int j = 0; j < 3; j++)
+        equal = equal && this.tokens[i][j] == ot.tokens[i][j];
+    return equal;
+  }
 }
