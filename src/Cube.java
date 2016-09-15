@@ -23,13 +23,17 @@ public class Cube implements Constants {
     this.backSide   = new Side(YELLOW);
   }
 
+  public Cube(Cube cb) {
+    this(cb.frontSide, cb.rightSide, cb.leftSide, cb.topSide, cb.bottomSide, cb.backSide);
+  }
+
   public Cube(Side frontSide, Side rightSide, Side leftSide, Side topSide, Side bottomSide, Side backSide) {
-    this.frontSide  = frontSide;
-    this.rightSide  = rightSide;
-    this.leftSide   = leftSide;
-    this.topSide    = topSide;
-    this.bottomSide = bottomSide;
-    this.backSide   = backSide;
+    this.frontSide  = new Side(frontSide);
+    this.rightSide  = new Side(rightSide);
+    this.leftSide   = new Side(leftSide);
+    this.topSide    = new Side(topSide);
+    this.bottomSide = new Side(bottomSide);
+    this.backSide   = new Side(backSide);
   }
 
   public char getColorName(int color){

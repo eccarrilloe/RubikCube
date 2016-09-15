@@ -6,7 +6,7 @@
 
 public interface Constants {
 
-	// Color of Tokens
+	// Token's Color Code
 	public static final int WHITE  = 1;
 	public static final int GREEN  = 2;
 	public static final int BLUE   = 3;
@@ -30,21 +30,13 @@ public interface Constants {
 	public static final int TOP    = 5;
 	public static final int BOTTOM = 6;
 
-	// Name of Sides
-	public static final String C_FRONT  = "FRONT";
-	public static final String C_BACK   = "BACK";
-	public static final String C_LEFT   = "LEFT";
-	public static final String C_RIGHT  = "RIGHT";
-	public static final String C_TOP    = "TOP";
-	public static final String C_BOTTOM = "BOTTOM";
-
 	// Directions
-	public static final int DIR_UP    = 0;
-	public static final int DIR_LEFT  = 1;
+	public static final int DIR_UP    = 2;
+	public static final int DIR_DOWN  = 1;
 	public static final int DIR_RIGHT = 2;
-	public static final int DIR_DOWN  = 3;
+	public static final int DIR_LEFT  = 1;
 
-	// Operations
+	// Rows & Columns
 	public static final int ROW_TOP    = 0;
 	public static final int ROW_MIDDLE = 1;
 	public static final int ROW_BOTTOM = 2;
@@ -52,6 +44,8 @@ public interface Constants {
 	public static final int COL_MIDDLE = 1;
 	public static final int COL_RIGHT  = 2;
 
+	// Operations
+	public static final int OPERATIONS = 6;
 	public static final int OP_ROTATE_FRONT = 1;
 	public static final int OP_ROTATE_BACK  = 2;
 	public static final int OP_ROW_TOP      = 3;
@@ -59,5 +53,9 @@ public interface Constants {
 	public static final int OP_COL_LEFT     = 5;
 	public static final int OP_COL_RIGHT    = 6;
 
-
+	// Search Types
+	public static final int SEARCH_DFS = 0;
+	public static final int SEARCH_BFS = 1;
+	public static final int SEARCH_IDS = 2;
+	public static final int SEARCH_AST = 3;
 }

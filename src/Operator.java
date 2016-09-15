@@ -3,24 +3,66 @@
  * Class for Rubik Cube's Operator
  * @author eccarrilloe
  */
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Operator implements Constants {
   public Cube cube;
+  public int maxDepth;
 
   public Operator() {
+    this.maxDepth = 0;
     this.cube = new Cube();
   }
 
   public Operator(Cube cube) {
+    this.maxDepth = 1000;
     this.cube = cube;
   }
 
-  public void assemble() {
+  public void assemble(int searchType) {
+    switch (searchType) {
+      case SEARCH_DFS: this.assembleDFS(); break;
+      case SEARCH_BFS: this.assembleBFS(); break;
+      case SEARCH_IDS: this.assembleIDS(); break;
+      case SEARCH_AST: this.assembleAST(); break;
+    }
+  }
 
+  private void assembleDFS() {
+    while(! this.exceedMaxDepth()) {
+
+    }
+  }
+
+  private void assembleBFS() {
+    while(! this.exceedMaxDepth()) {
+
+    }
+  }
+
+  private void assembleIDS() {
+    while(! this.exceedMaxDepth()) {
+
+    }
+  }
+
+  private void assembleAST() {
+    while(! this.exceedMaxDepth()) {
+
+    }
+  }
+
+  private boolean exceedMaxDepth() {
+    return this.cube.level > this.maxDepth;
   }
 
   public void disarm(int operations) {
-
+    this.maxDepth = this.maxDepth + operations;
+    for (int i = 0; i < operations; i++) {
+      int operation = ThreadLocalRandom.current().nextInt(1, 6 + 1);
+      int direction = ThreadLocalRandom.current().nextInt(1, 2 + 1);
+      this.operate(operation, direction);
+    }
   }
 
   public void operate(int operation, int direction) {
@@ -132,14 +174,20 @@ public class Operator implements Constants {
     }
   }
 
-  public boolean validate() {
-    return true;
+  private boolean validateSide(Side sd) {
+    boolean valid = true;
+    int color = sd.tokens[0][0];
+    for (int i = 0; i < 3; i++)
+      for (int j = 0; j < 3; j++)
+        valid = color == sd.tokens[i][j];
+    return valid;
   }
 
+
   public static void main(String[] args) {
-    Cube cb = new Cube();
-    Operator op = new Operator(cb);
-    op.operate(1,1);
-    System.out.println(cb);
+    Operator op = new Operator();
+    System.out.println(op.cube);
+    op.disarm(15);
+    System.out.println(op.cube);
   }
 }
