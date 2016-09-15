@@ -139,10 +139,7 @@ public class Operator implements Constants {
   public static void main(String[] args) {
     Cube cb = new Cube();
     Operator op = new Operator(cb);
-
-    System.out.println(cb);
-    op.operate(OP_ROW_TOP, DIR_LEFT);
-    System.out.println("************************");
+    op.operate(1,1);
     System.out.println(cb);
   }
 }
