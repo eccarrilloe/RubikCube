@@ -8,14 +8,28 @@ public class Side implements Constants {
   int[][] tokens;
 
   public Side(int color) {
-    tokens = new int[3][3];
+    this.tokens = new int[3][3];
     for (int i = 0; i < 3; i++)
       for (int j = 0; j < 3; j++)
-        tokens[i][j] = color;
+        this.tokens[i][j] = color;
+  }
+
+  public Side(int[][] tokens) {
+    this.tokens = new int[3][3];
+    for (int i = 0; i < 3; i++)
+      for (int j = 0; j < 3; j++)
+        this.tokens[i][j] = tokens[i][j];
+  }
+
+  public Side(Side sd) {
+    this.tokens = new int[3][3];
+    for (int i = 0; i < 3; i++)
+      for (int j = 0; j < 3; j++)
+        this.tokens[i][j] = sd.tokens[i][j];
   }
 
   public void setToken(int x, int y, int color) {
-    tokens[x][y] = color;
+    this.tokens[x][y] = color;
   }
 
   public int[] getRow(int row) {
