@@ -33,7 +33,7 @@ class Operator implements Constants {
     rowReturned[1] = cube[(side * 9) + (row * 3) + 1];
     rowReturned[2] = cube[(side * 9) + (row * 3) + 2];
     System.out.println("JUST TESTING");
-    System.out.println("ddd");
+  
     return rowReturned;
   }
 
