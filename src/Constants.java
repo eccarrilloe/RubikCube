@@ -33,8 +33,8 @@ interface Constants {
   public static final int ROTATE_BACK_DER  = 2;
   public static final int ROW_TOP_DER      = 3;
   public static final int ROW_BOTTOM_DER   = 4;
-  public static final int COL_LEFT_TOP     = 5;
-  public static final int COL_RIGHT_TOP    = 6;
+  public static final int COL_LEFT_UP     = 5;
+  public static final int COL_RIGHT_UP    = 6;
 
   // Search
   public static final int SEARCH_DFS = 0;

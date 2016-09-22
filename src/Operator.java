@@ -21,7 +21,8 @@ class Operator implements Constants {
 
   public void disarm() {
     //  this.rotate(this.cube, FRONT, 1);
-      this.rotate(this.cube, BACK, 1);
+      this.operate(this.cube, COL_RIGHT_UP, 1);
+      this.operate(this.cube, ROTATE_BACK_DER, 1);
   }
 
   public void assemble() {
@@ -61,18 +62,24 @@ class Operator implements Constants {
 
   public void rotate(byte[] cube, int side, int direction){
       if(side==FRONT){
-        byte[] aux = this.getRow(cube, TOP, 2);
-        this.setRow(cube, this.getColumn(cube, LEFT, 2), TOP, 2);
-        this.setColumn(cube, this.getRow(cube, BOTTOM, 0), LEFT, 2);
-        this.setRow(cube, this.getColumn(cube, RIGHT, 0), BOTTOM, 0);
-        this.setColumn(cube, aux, RIGHT, 0);
+        byte[] temp1 = this.getRow(cube, FRONT, 0);
+        byte[] temp2 = this.getColumn(cube, FRONT, 0);
+        byte[] temp3 = this.getRow(cube, FRONT, 2);
+        byte[] temp4 = this.getColumn(cube, FRONT, 2);
+        this.setRow(cube, temp2, FRONT, 0);
+        this.setRow(cube, temp4, FRONT, 2);
+        this.setColumn(cube, temp3, FRONT, 0);
+        this.setColumn(cube, temp1, FRONT, 2);
       }
       if(side==BACK){
-        byte[] aux = this.getRow(cube, TOP, 0);
-        this.setRow(cube, this.getColumn(cube, LEFT, 0), TOP, 0);
-        this.setColumn(cube, this.getRow(cube, BOTTOM, 2), LEFT, 0);
-        this.setRow(cube, this.getColumn(cube, RIGHT, 2), BOTTOM, 2);
-        this.setColumn(cube, aux, RIGHT, 2);
+        byte[] temp1 = this.getRow(cube, BACK, 0);
+        byte[] temp2 = this.getColumn(cube, BACK, 0);
+        byte[] temp3 = this.getRow(cube, BACK, 2);
+        byte[] temp4 = this.getColumn(cube, BACK, 2);
+        this.setRow(cube, temp2, BACK, 0);
+        this.setRow(cube, temp4, BACK, 2);
+        this.setColumn(cube, temp3, BACK, 0);
+        this.setColumn(cube, temp1, BACK, 2);
       }
   }
 
@@ -81,7 +88,48 @@ class Operator implements Constants {
     byte[] tmp = new byte[3];
     switch(operation){
       case ROTATE_FRONT_DER:
-
+          tmp = this.getRow(cube, TOP, 2);
+          this.setRow(cube, this.getColumn(cube, LEFT, 2), TOP, 2);
+          this.setColumn(cube, this.getRow(cube, BOTTOM, 0), LEFT, 2);
+          this.setRow(cube, this.getColumn(cube, RIGHT, 0), BOTTOM, 0);
+          this.setColumn(cube, tmp, RIGHT, 0);
+          this.rotate(cube, FRONT, 1); //Direction not implemented yet
+      break;
+      case ROTATE_BACK_DER:
+          tmp = this.getRow(cube, TOP, 0);
+          this.setRow(cube, this.getColumn(cube, LEFT, 0), TOP, 0);
+          this.setColumn(cube, this.getRow(cube, BOTTOM, 2), LEFT, 0);
+          this.setRow(cube, this.getColumn(cube, RIGHT, 2), BOTTOM, 2);
+          this.setColumn(cube, tmp, RIGHT, 2);
+          this.rotate(cube, BACK, 1); //Direction not implemented yet
+      break;
+      case ROW_TOP_DER:
+          tmp = this.getRow(cube, FRONT, 0);
+          this.setRow(cube, this.getRow(cube, LEFT, 0), FRONT, 0);
+          this.setRow(cube, this.getRow(cube, BACK, 0), LEFT, 0);
+          this.setRow(cube, this.getRow(cube, RIGHT, 0), BACK, 0);
+          this.setRow(cube, tmp, RIGHT, 0);
+      break;
+      case ROW_BOTTOM_DER:
+          tmp = this.getRow(cube, FRONT, 2);
+          this.setRow(cube, this.getRow(cube, LEFT, 2), FRONT, 2);
+          this.setRow(cube, this.getRow(cube, BACK, 2), LEFT, 2);
+          this.setRow(cube, this.getRow(cube, RIGHT, 2), BACK, 2);
+          this.setRow(cube, tmp, RIGHT, 2);
+      break;
+      case COL_LEFT_UP:
+          tmp = this.getColumn(cube, FRONT, 0);
+          this.setColumn(cube, this.getColumn(cube, BOTTOM, 0), FRONT, 0);
+          this.setColumn(cube, this.getColumn(cube, BACK, 0), BOTTOM, 0);
+          this.setColumn(cube, this.getColumn(cube, TOP, 0), BACK, 0);
+          this.setColumn(cube, tmp, TOP, 0);
+      break;
+      case COL_RIGHT_UP:
+          tmp = this.getColumn(cube, FRONT, 2);
+          this.setColumn(cube, this.getColumn(cube, BOTTOM, 2), FRONT, 2);
+          this.setColumn(cube, this.getColumn(cube, BACK, 2), BOTTOM, 2);
+          this.setColumn(cube, this.getColumn(cube, TOP, 2), BACK, 2);
+          this.setColumn(cube, tmp, TOP, 2);
       break;
     }
     /*
