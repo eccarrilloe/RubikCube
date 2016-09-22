@@ -32,6 +32,7 @@ class Operator implements Constants {
     rowReturned[0] = (side * 9) + (row * 3) + 0;
     rowReturned[1] = (side * 9) + (row * 3) + 1;
     rowReturned[2] = (side * 9) + (row * 3) + 2;
+
     return rowReturned;
   }
 
@@ -46,15 +47,14 @@ class Operator implements Constants {
   }
 
   public void setRow(byte[] cube, int[] positions, int side, int row){
-
       for (int y = 0 ; y < 3 ; y++){
           this.cube[(side * 9) + (row*3) + y] = this.cube[positions[y]];
       }
   }
 
-  public void setColumn(byte[] the_Column, int side, int column){ //column must be 0 or 2.
+  public void setColumn(byte[] cube, int[] positions, int side, int column){ //column must be 0 or 2.
     for (int y  = 0 ; y < 3; y++){
-      this.cube[(side*9) + (3*y) + column ] = the_Column[y];
+      this.cube[(side*9) + (3*y) + column ] = this.cube[positions[y]];
     }
   }
 
@@ -62,8 +62,10 @@ class Operator implements Constants {
 
   public void rotate(byte[] cube, int side, int direction){
       int[] positions = this.getRow(cube, TOP, 0);
-
       this.setRow(cube, positions, BOTTOM, 2);
+
+      int[] positions2 = this.getColumn(cube, FRONT, 0);
+      this.setColumn(cube, positions2, LEFT,2);
   }
 
   public void operate(byte[] oldCube, int operation, int direction) {
@@ -203,56 +205,30 @@ class Operator implements Constants {
     String offset = "        ";
 
     // Print Top
-    strCube += "\n" + offset;
-    for (int i = 0; i < 3; i++) {
-      strCube += getColorName(this.cube[((TOP * 9) + i + 6)]) +" ";
-    }
-    strCube += "\n" + offset;
-    for (int i = 0; i < 3; i++) {
-      strCube += getColorName(this.cube[((TOP * 9) + i + 3)]) +" ";
-    }
-    strCube += "\n" + offset;
-    for (int i = 0; i < 3; i++) {
-      strCube += getColorName(this.cube[((TOP * 9) + i)]) +" ";
+    for (int i = 0; i < 9; i++) {
+      if (i % 3 == 0) strCube += "\n" + offset;
+      strCube += this.getColorName(this.cube[((TOP * 9) + i)]) + " ";
     }
 
     strCube += "\n" + offset + "-----\n";
     // Print Left-Front-Right-Back
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 4; j++) {
+        strCube += this.getColorName(this.cube[((j * 9) + (i * 3) + 0)]) + " ";
+        strCube += this.getColorName(this.cube[((j * 9) + (i * 3) + 1)]) + " ";
+        strCube += this.getColorName(this.cube[((j * 9) + (i * 3) + 2)]) + " | ";
+      }
+      strCube += "\n";
+    }
 
-    for (int j = 0; j < 4; j++) {
-      strCube += getColorName(this.cube[(j * 9 +  6)]) + " ";
-      strCube += getColorName(this.cube[(j * 9 +  7)]) + " ";
-      strCube += getColorName(this.cube[((j * 9) + 8)]) + " | ";
-    }
-    strCube += "\n";
-    for (int j = 0; j < 4; j++) {
-      strCube += getColorName(this.cube[(j * 9 +  3)]) + " ";
-      strCube += getColorName(this.cube[(j * 9 +  4)]) + " ";
-      strCube += getColorName(this.cube[((j * 9) + 5)]) + " | ";
-    }
-    strCube += "\n";
-    for (int j = 0; j < 4; j++) {
-      strCube += getColorName(this.cube[(j * 9 + 0)]) + " ";
-      strCube += getColorName(this.cube[(j * 9 + 1)]) + " ";
-      strCube += getColorName(this.cube[(j * 9+ 2)]) + " | ";
-    }
-    strCube += "\n";
-
-    strCube += offset + "-----\n" + offset;
+    strCube += offset + "-----\n";
 
     // Print Bottom
-    for (int i = 0; i < 3; i++) {
-      strCube += getColorName(this.cube[((BOTTOM * 9) + i + 6)]) +" ";
+    for (int i = 0; i < 9; i++) {
+      if (i % 3 == 0 && i != 0) strCube += "\n";
+      if (i % 3 == 0) strCube += offset;
+      strCube += this.getColorName(this.cube[((BOTTOM * 9) + i)]) + " ";
     }
-    strCube += "\n" + offset;
-    for (int i = 0; i < 3; i++) {
-      strCube += getColorName(this.cube[((BOTTOM * 9) + i + 3)]) +" ";
-    }
-    strCube += "\n" + offset;
-    for (int i = 0; i < 3; i++) {
-      strCube += getColorName(this.cube[((BOTTOM * 9) + i)]) +" ";
-    }
-
 
     System.out.println(strCube);
   }
