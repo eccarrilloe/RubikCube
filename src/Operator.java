@@ -1,125 +1,80 @@
-/**
- * Operator.java
- * Class for Rubik Cube's Operator
- * @author eccarrilloe
- */
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.Stack;
+class Operator implements Constants {
 
-public class Operator implements Constants {
-  public int maxDepth;
+  private byte[] cube;
 
   public Operator() {
-    this.maxDepth = 0;
+    this.initCube();
   }
 
-  public Cube disarm(Cube cube, int operations) {
-    this.maxDepth = operations;
-    for (int i = 0; i < operations; i++) {
-      int operation = ThreadLocalRandom.current().nextInt(1, OPERATIONS + 1);
-      int direction = ThreadLocalRandom.current().nextInt(1, 2 + 1);
-      cube = this.operate(cube, operation, direction);
-    }
-    return cube;
+  public void initCube() {
+    this.cube = new byte[54];
+
+    // Init sides of cube
+    for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((FRONT * 9) + (i * 3) + j)]  = WHITE;
+    for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((BACK * 9) + (i * 3) + j)]   = GREEN;
+    for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((LEFT * 9) + (i * 3) + j)]   = BLUE;
+    for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((RIGHT * 9) + (i * 3) + j)]  = RED;
+    for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((TOP * 9) + (i * 3) + j)]    = ORANGE;
+    for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((BOTTOM * 9) + (i * 3) + j)] = YELLOW;
+
   }
 
-  public Cube assemble(Cube cube, int searchType) {
-    Cube res = new Cube();
-    switch (searchType) {
-      case SEARCH_DFS: res = this.assembleDFS(cube); break;
-      case SEARCH_BFS: res = this.assembleBFS(cube); break;
-      case SEARCH_IDS: res = this.assembleIDS(cube); break;
-      case SEARCH_AST: res = this.assembleAST(cube); break;
-    }
-    return res;
+  public void disarm() {
+      this.rotate(this.cube, FRONT, 1);
   }
 
-  private Cube assembleDFS(Cube cube) {
-    Stack<Cube> tree = new Stack<>();
-    tree.push(cube);
-    Cube currentCube = new Cube();
-    Cube children = new Cube();
-    boolean found = false;
+  public void assemble() {
 
-    while (! tree.empty()) {
-      currentCube = tree.pop();
+  }
 
-      if (this.exceedMaxDepth(currentCube))
-        continue;
+  public int[] getRow(byte[] cube, int side, int row) {
+    int[] rowReturned = new int[3];
+    rowReturned[0] = (side * 9) + (row * 3) + 0;
+    rowReturned[1] = (side * 9) + (row * 3) + 1;
+    rowReturned[2] = (side * 9) + (row * 3) + 2;
+    return rowReturned;
+  }
 
-      if (this.validate(currentCube))
-        break;
+  public int[] getColumn(byte[] cube, int side, int col) {
+    int[] colReturned = new int[3];
 
-      for (int op = 1; op <= OPERATIONS; op++) {
-        // Operation 1
-        children = this.operate(currentCube, op, 1);
-        children.level = currentCube.level + 1;
-        if (this.validate(children)) {
-          currentCube = children;
-          found = true;
-          break;
-        }
-        if (tree.search(children) == -1) {
-          tree.push(children);
-          System.out.print("NF ");
-        } else {
-          System.out.print("F ");
-        }
+    colReturned[0] = (side * 9) + 0 + col;
+    colReturned[1] = (side * 9) + 3 + col;
+    colReturned[2] = (side * 9) + 6 + col;
 
-        // Operation 2
-        children = this.operate(currentCube, op, 2);
-        children.level = currentCube.level + 1;
-        if (this.validate(children)) {
-          currentCube = children;
-          found = true;
-          break;
-        }
-        if (tree.search(children) == -1) {
-          tree.push(children);
-          System.out.print("NF ");
-        } else {
-          System.out.print("F ");
-        }
+    return colReturned;
+  }
+
+  public void setRow(byte[] cube, int[] positions, int side, int row){
+
+      for (int y = 0 ; y < 3 ; y++){
+          this.cube[(side * 9) + (row*3) + y] = this.cube[positions[y]];
       }
+  }
 
-      if (found == true)
-        break;
+  public void setColumn(byte[] the_Column, int side, int column){ //column must be 0 or 2.
+    for (int y  = 0 ; y < 3; y++){
+      this.cube[(side*9) + (3*y) + column ] = the_Column[y];
     }
-
-    return currentCube;
   }
 
-  private Cube assembleBFS(Cube cube) {
-    Cube res = new Cube();
-    while(! this.exceedMaxDepth(cube)) {
+  public void setColumn(int column){}
 
+  public void rotate(byte[] cube, int side, int direction){
+      int[] positions = this.getRow(cube, TOP, 0);
+
+      this.setRow(cube, positions, BOTTOM, 2);
+  }
+
+  public void operate(byte[] oldCube, int operation, int direction) {
+    byte[] cube = oldCube.clone();
+    byte[] tmp = new byte[3];
+    switch(operation){
+      case ROTATE_FRONT_DER:
+
+      break;
     }
-    return res;
-  }
-
-  private Cube assembleIDS(Cube cube) {
-    Cube res = new Cube();
-    while(! this.exceedMaxDepth(cube)) {
-
-    }
-    return res;
-  }
-
-  private Cube assembleAST(Cube cube) {
-    Cube res = new Cube();
-    while(! this.exceedMaxDepth(cube)) {
-
-    }
-    return res;
-  }
-
-  private boolean exceedMaxDepth(Cube cube) {
-    return cube.level > this.maxDepth;
-  }
-
-  public Cube operate(Cube cb, int operation, int direction) {
-    Cube cube = new Cube(cb);
-    int[] tmp = new int[3];
+    /*
     switch (operation) {
       case OP_ROTATE_FRONT:
         if (direction == DIR_RIGHT) {
@@ -225,40 +180,80 @@ public class Operator implements Constants {
         break;
       default: break;
     }
+    cube.operations[cube.level] = operation * 10 + direction;
     return cube;
+    */
   }
 
-  public boolean validate(Cube cube) {
-    boolean valid = this.validateSide(cube.frontSide);
-    valid = valid && this.validateSide(cube.topSide);
-    valid = valid && this.validateSide(cube.leftSide);
-    valid = valid && this.validateSide(cube.rightSide);
-    valid = valid && this.validateSide(cube.bottomSide);
-    valid = valid && this.validateSide(cube.backSide);
-
-    return valid;
+  public String getColorName(byte color) {
+    String name = "";
+    switch (color) {
+      case 0x1: name = "W"; break;
+      case 0x2: name = "G"; break;
+      case 0x3: name = "B"; break;
+      case 0x4: name = "R"; break;
+      case 0x5: name = "O"; break;
+      case 0x6: name = "Y"; break;
+    }
+    return name;
   }
 
-  private boolean validateSide(Side sd) {
-    boolean valid = true;
-    int color = sd.tokens[0][0];
-    for (int i = 0; i < 3; i++)
-      for (int j = 0; j < 3; j++)
-        valid = valid && (color == sd.tokens[i][j]);
-    return valid;
-  }
+  public void printCube() {
+    String strCube = "";
+    String offset = "        ";
+
+    // Print Top
+    strCube += "\n" + offset;
+    for (int i = 0; i < 3; i++) {
+      strCube += getColorName(this.cube[((TOP * 9) + i + 6)]) +" ";
+    }
+    strCube += "\n" + offset;
+    for (int i = 0; i < 3; i++) {
+      strCube += getColorName(this.cube[((TOP * 9) + i + 3)]) +" ";
+    }
+    strCube += "\n" + offset;
+    for (int i = 0; i < 3; i++) {
+      strCube += getColorName(this.cube[((TOP * 9) + i)]) +" ";
+    }
+
+    strCube += "\n" + offset + "-----\n";
+    // Print Left-Front-Right-Back
+
+    for (int j = 0; j < 4; j++) {
+      strCube += getColorName(this.cube[(j * 9 +  6)]) + " ";
+      strCube += getColorName(this.cube[(j * 9 +  7)]) + " ";
+      strCube += getColorName(this.cube[((j * 9) + 8)]) + " | ";
+    }
+    strCube += "\n";
+    for (int j = 0; j < 4; j++) {
+      strCube += getColorName(this.cube[(j * 9 +  3)]) + " ";
+      strCube += getColorName(this.cube[(j * 9 +  4)]) + " ";
+      strCube += getColorName(this.cube[((j * 9) + 5)]) + " | ";
+    }
+    strCube += "\n";
+    for (int j = 0; j < 4; j++) {
+      strCube += getColorName(this.cube[(j * 9 + 0)]) + " ";
+      strCube += getColorName(this.cube[(j * 9 + 1)]) + " ";
+      strCube += getColorName(this.cube[(j * 9+ 2)]) + " | ";
+    }
+    strCube += "\n";
+
+    strCube += offset + "-----\n" + offset;
+
+    // Print Bottom
+    for (int i = 0; i < 3; i++) {
+      strCube += getColorName(this.cube[((BOTTOM * 9) + i + 6)]) +" ";
+    }
+    strCube += "\n" + offset;
+    for (int i = 0; i < 3; i++) {
+      strCube += getColorName(this.cube[((BOTTOM * 9) + i + 3)]) +" ";
+    }
+    strCube += "\n" + offset;
+    for (int i = 0; i < 3; i++) {
+      strCube += getColorName(this.cube[((BOTTOM * 9) + i)]) +" ";
+    }
 
 
-  public static void main(String[] args) {
-    Cube cube = new Cube();
-    Operator operator = new Operator();
-
-    System.out.println(cube);
-    cube = operator.disarm(cube, 8);
-    System.out.println(cube);
-    cube = operator.assemble(cube, SEARCH_DFS);
-    System.out.println();
-    System.out.println(cube);
-    System.out.println("OPERATIONS: " + cube.level);
+    System.out.println(strCube);
   }
 }

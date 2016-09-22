@@ -1,4 +1,8 @@
 bin/
+<<<<<<< HEAD
+=======
+src/cube_Reloaded
+>>>>>>> 86fa39c29b3061e52f28d89f77f3178c0d463291
 *.class
 
 # Mobile Tools for Java (J2ME)
