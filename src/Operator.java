@@ -20,52 +20,60 @@ class Operator implements Constants {
   }
 
   public void disarm() {
-      this.rotate(this.cube, FRONT, 1);
+    //  this.rotate(this.cube, FRONT, 1);
+      this.rotate(this.cube, BACK, 1);
   }
 
   public void assemble() {
 
   }
 
-  public int[] getRow(byte[] cube, int side, int row) {
-    int[] rowReturned = new int[3];
-    rowReturned[0] = (side * 9) + (row * 3) + 0;
-    rowReturned[1] = (side * 9) + (row * 3) + 1;
-    rowReturned[2] = (side * 9) + (row * 3) + 2;
+  public byte[] getRow(byte[] cube, int side, int row) {
+    byte[] rowReturned = new byte[3];
+    rowReturned[0] = this.cube[(side * 9) + (row * 3) + 0];
+    rowReturned[1] = this.cube[(side * 9) + (row * 3) + 1];
+    rowReturned[2] = this.cube[(side * 9) + (row * 3) + 2];
 
     return rowReturned;
   }
 
-  public int[] getColumn(byte[] cube, int side, int col) {
-    int[] colReturned = new int[3];
+  public byte[] getColumn(byte[] cube, int side, int col) {
+    byte[] colReturned = new byte[3];
 
-    colReturned[0] = (side * 9) + 0 + col;
-    colReturned[1] = (side * 9) + 3 + col;
-    colReturned[2] = (side * 9) + 6 + col;
+    colReturned[0] = this.cube[(side * 9) + 0 + col];
+    colReturned[1] = this.cube[(side * 9) + 3 + col];
+    colReturned[2] = this.cube[(side * 9) + 6 + col];
 
     return colReturned;
   }
 
-  public void setRow(byte[] cube, int[] positions, int side, int row){
+  public void setRow(byte[] cube, byte[] newColors, int side, int row){
       for (int y = 0 ; y < 3 ; y++){
-          this.cube[(side * 9) + (row*3) + y] = this.cube[positions[y]];
+          this.cube[(side * 9) + (row*3) + y] = newColors[y];
       }
   }
 
-  public void setColumn(byte[] cube, int[] positions, int side, int column){ //column must be 0 or 2.
+  public void setColumn(byte[] cube, byte[] positions, int side, int column){ //column must be 0 or 2.
     for (int y  = 0 ; y < 3; y++){
-      this.cube[(side*9) + (3*y) + column ] = this.cube[positions[y]];
+      this.cube[(side*9) + (3*y) + column ] = positions[y];
     }
   }
 
-  public void setColumn(int column){}
-
   public void rotate(byte[] cube, int side, int direction){
-      int[] positions = this.getRow(cube, TOP, 0);
-      this.setRow(cube, positions, BOTTOM, 2);
-
-      int[] positions2 = this.getColumn(cube, FRONT, 0);
-      this.setColumn(cube, positions2, LEFT,2);
+      if(side==FRONT){
+        byte[] aux = this.getRow(cube, TOP, 2);
+        this.setRow(cube, this.getColumn(cube, LEFT, 2), TOP, 2);
+        this.setColumn(cube, this.getRow(cube, BOTTOM, 0), LEFT, 2);
+        this.setRow(cube, this.getColumn(cube, RIGHT, 0), BOTTOM, 0);
+        this.setColumn(cube, aux, RIGHT, 0);
+      }
+      if(side==BACK){
+        byte[] aux = this.getRow(cube, TOP, 0);
+        this.setRow(cube, this.getColumn(cube, LEFT, 0), TOP, 0);
+        this.setColumn(cube, this.getRow(cube, BOTTOM, 2), LEFT, 0);
+        this.setRow(cube, this.getColumn(cube, RIGHT, 2), BOTTOM, 2);
+        this.setColumn(cube, aux, RIGHT, 2);
+      }
   }
 
   public void operate(byte[] oldCube, int operation, int direction) {
