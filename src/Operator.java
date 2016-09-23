@@ -47,8 +47,8 @@ class Operator implements Constants {
 
   }
 
-  private byte[] assembleBFS(byte[] cube) {
-    byte[] currentCube = cube.clone();
+  private void assembleBFS() {
+    byte[] currentCube = this.cube;
     ArrayDeque<byte[]> queue = new ArrayDeque<>();
     ArrayList<byte[]> inList = new ArrayList<>();
     int aux = 1, level = 0, elementsInLevel = 1, paux=1;
@@ -59,14 +59,14 @@ class Operator implements Constants {
       aux++;
       inList.add(current);
       if(this.validate(current))
-      return current;
+      return;
       else{
         ArrayList<byte[]> childs = this.getChildrens(current);
         for (byte[] c : childs ) {
           for (byte[] cubeInList : inList) {
             if(!cubeInList.equals(c)){
               if(this.validate(c))
-              return c;
+              return;
               else{
                 try{
                   queue.add(c);
@@ -84,7 +84,7 @@ class Operator implements Constants {
         }
       }
     }
-    return currentCube;
+    return;
   }
 
   private void assembleIDS() {
@@ -134,7 +134,7 @@ class Operator implements Constants {
     return tmp;
   }
 
-  public byte[] getRow(byte[] cube, int side, int row) {
+  public byte[] getRow(byte[] current, int side, int row) {
     byte[] rowReturned = new byte[3];
     rowReturned[0] = current[(side * 9) + (row * 3) + 0];
     rowReturned[1] = current[(side * 9) + (row * 3) + 1];
