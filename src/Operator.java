@@ -12,10 +12,16 @@ class Operator implements Constants {
   public Operator() {
     this.initCube();
   }
-
+  private static long getMemory()
+   {
+       Runtime runtime = Runtime.getRuntime();
+       return runtime.totalMemory() - runtime.freeMemory();
+   }
   public void initCube() {
-    this.cube = new byte[54];
+    System.gc();
+    long startMem = getMemory();
 
+    this.cube = new byte[54];
     // Init sides of cube
     for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((FRONT * 9) + (i * 3) + j)]  = WHITE;
     for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((BACK * 9) + (i * 3) + j)]   = YELLOW;
@@ -23,22 +29,27 @@ class Operator implements Constants {
     for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((RIGHT * 9) + (i * 3) + j)]  = GREEN;
     for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((TOP * 9) + (i * 3) + j)]    = RED;
     for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((BOTTOM * 9) + (i * 3) + j)] = ORANGE;
+
+    System.gc();
+    long endMem = getMemory();
+    System.out.println("MEMORY TAKEN: " + (endMem-startMem));
   }
 
-  public void disarm(int operations) {
-    byte[] newCube = new byte[54];
+  public byte[] disarm(int operations) {
     for (int i = 0; i < operations; i++) {
       int operation = ThreadLocalRandom.current().nextInt(1, OPERATIONS + 1);
-      newCube = this.operate(cube, operation);
+      this.cube = this.operate(this.cube, operation);
     }
     System.out.println("Cube Disarmed");
-    printCube(newCube);
+    printCube(this.cube);
+    return this.cube;
   }
 
   public void assemble() {
   //  assembleBFS(cube);
-        printCube(cube);
-       this.getChildrens(this.cube);
+      printCube(this.cube);
+      this.getChildrens(this.cube);
+
   }
 
   public boolean validate(byte[] current){
@@ -48,8 +59,10 @@ class Operator implements Constants {
     for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) if(!(current[((RIGHT * 9) + (i * 3) + j)]   == GREEN))  return false;
     for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) if(!(current[((TOP * 9) + (i * 3) + j)]     == RED))    return false;
     for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) if (!(current[((BOTTOM * 9) + (i * 3) + j)] == ORANGE)) return false;
+
     return true;
   }
+
   private byte[] deepCopy(byte[] old){
     byte[] copy = new byte[old.length];
     for (int i=0; i<old.length; i++) {
@@ -57,24 +70,17 @@ class Operator implements Constants {
     }
     return copy;
   }
+
   public ArrayList<byte[]> getChildrens(byte[] currentCube){
     ArrayList<byte[]> tmp = new ArrayList<>();
-    byte[] tmp0 = deepCopy(currentCube);
-    byte[] tmp1 = deepCopy(currentCube);
-    byte[] tmp2 = deepCopy(currentCube);
-    byte[] tmp3 = deepCopy(currentCube);
-    byte[] tmp4 = deepCopy(currentCube);
-    byte[] tmp5 = deepCopy(currentCube);
-    tmp.add(this.operate(tmp0, ROTATE_FRONT_DER));
+    tmp.add(this.operate(currentCube, ROTATE_FRONT_DER));
     printCube(tmp.get(0));
-    printCube(tmp1);
-    tmp.add(this.operate(tmp1, ROTATE_BACK_DER));
-    printCube(tmp1);
+    tmp.add(this.operate(currentCube, ROTATE_BACK_DER));
     printCube(tmp.get(1));
-    tmp.add(this.operate(tmp2, ROW_TOP_DER));
-    tmp.add(this.operate(tmp3, ROW_BOTTOM_DER));
-    tmp.add(this.operate(tmp4, COL_LEFT_UP));
-    tmp.add(this.operate(tmp5, COL_RIGHT_UP));
+    tmp.add(this.operate(currentCube, ROW_TOP_DER));
+    tmp.add(this.operate(currentCube, ROW_BOTTOM_DER));
+    tmp.add(this.operate(currentCube, COL_LEFT_UP));
+    tmp.add(this.operate(currentCube, COL_RIGHT_UP));
 
     return tmp;
   }
@@ -247,7 +253,7 @@ class Operator implements Constants {
   }
 
   public void printCube(byte[] ncube) {
-    byte[] current = ncube.clone();
+    byte[] current = deepCopy(ncube);
     String strCube = "";
     String offset = "        ";
 

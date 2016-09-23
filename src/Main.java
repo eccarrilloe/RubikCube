@@ -1,7 +1,7 @@
 class Main {
   public static void main(String[] args) {
     Operator op = new Operator();
-//    op.disarm(2);
+//    byte[] cube = op.disarm(1);
     op.assemble();
 
   }
