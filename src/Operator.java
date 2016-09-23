@@ -23,6 +23,7 @@ class Operator implements Constants {
     for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((RIGHT * 9) + (i * 3) + j)]  = GREEN;
     for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((TOP * 9) + (i * 3) + j)]    = RED;
     for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((BOTTOM * 9) + (i * 3) + j)] = ORANGE;
+
   }
 
   public void disarm(int operations) {
@@ -50,11 +51,10 @@ class Operator implements Constants {
     byte[] currentCube = cube.clone();
     ArrayDeque<byte[]> queue = new ArrayDeque<>();
     ArrayList<byte[]> inList = new ArrayList<>();
-    int aux = 1, level = 0, elementsInLevel = 1;
+    int aux = 1, level = 0, elementsInLevel = 1, paux=1;
     queue.add(currentCube);
     byte[] current = new byte[54];
     while(!queue.isEmpty()){
-      if(level==4) break;
       current = queue.remove();
       aux++;
       inList.add(current);
@@ -63,8 +63,6 @@ class Operator implements Constants {
       else{
         ArrayList<byte[]> childs = this.getChildrens(current);
         for (byte[] c : childs ) {
-          if(level==1)
-            printCube(c);
           for (byte[] cubeInList : inList) {
             if(!cubeInList.equals(c)){
               if(this.validate(c))
@@ -76,7 +74,6 @@ class Operator implements Constants {
                   System.out.println("Memory Out!");
                 }
                 if(queue.size()%aux==0){
-                  System.out.println("*****************LEVEL " + level + "*****************");
                   level++;
                   aux *=6;
                 }
@@ -139,58 +136,56 @@ class Operator implements Constants {
 
   public byte[] getRow(byte[] cube, int side, int row) {
     byte[] rowReturned = new byte[3];
-    rowReturned[0] = this.cube[(side * 9) + (row * 3) + 0];
-    rowReturned[1] = this.cube[(side * 9) + (row * 3) + 1];
-    rowReturned[2] = this.cube[(side * 9) + (row * 3) + 2];
+    rowReturned[0] = current[(side * 9) + (row * 3) + 0];
+    rowReturned[1] = current[(side * 9) + (row * 3) + 1];
+    rowReturned[2] = current[(side * 9) + (row * 3) + 2];
     return rowReturned;
   }
 
-  public byte[] getColumn(byte[] cube, int side, int col) {
+  public byte[] getColumn(byte[] current, int side, int col) {
     byte[] colReturned = new byte[3];
-
-    colReturned[0] = this.cube[(side * 9) + 0 + col];
-    colReturned[1] = this.cube[(side * 9) + 3 + col];
-    colReturned[2] = this.cube[(side * 9) + 6 + col];
+    colReturned[0] = current[(side * 9) + 0 + col];
+    colReturned[1] = current[(side * 9) + 3 + col];
+    colReturned[2] = current[(side * 9) + 6 + col];
 
     return colReturned;
   }
 
-  public void setRow(byte[] cube, byte[] newColors, int side, int row, boolean reverse){
-    if (reverse) {
-      this.cube[(side * 9) + (row*3) + 0] = newColors[2];
-      this.cube[(side * 9) + (row*3) + 1] = newColors[1];
-      this.cube[(side * 9) + (row*3) + 2] = newColors[0];
-    }
-    else{
-      this.cube[(side * 9) + (row*3) + 0] = newColors[0];
-      this.cube[(side * 9) + (row*3) + 1] = newColors[1];
-      this.cube[(side * 9) + (row*3) + 2] = newColors[2];
-    }
-  }
-
-  public void setColumn(byte[] cube, byte[] positions, int side, int column, boolean reverse){ //column must be 0 or 2.
+  public void setRow(byte[] current, byte[] newColors, int side, int row, boolean reverse){
     if(reverse){
-      this.cube[(side*9) + (3*0) + column ] = positions[2];
-      this.cube[(side*9) + (3*1) + column ] = positions[1];
-      this.cube[(side*9) + (3*2) + column ] = positions[0];
+      current[(side * 9) + (row*3) + 0] = newColors[2];
+      current[(side * 9) + (row*3) + 1] = newColors[1];
+      current[(side * 9) + (row*3) + 2] = newColors[0];
     }
     else{
-      this.cube[(side*9) + (3*0) + column ] = positions[0];
-      this.cube[(side*9) + (3*1) + column ] = positions[1];
-      this.cube[(side*9) + (3*2) + column ] = positions[2];
+      current[(side * 9) + (row*3) + 0] = newColors[0];
+      current[(side * 9) + (row*3) + 1] = newColors[1];
+      current[(side * 9) + (row*3) + 2] = newColors[2];
     }
   }
 
-  public void rotate(byte[] cube, int side, int direction){
-    byte[] temp1 = this.getRow(cube, side, 0);
-    byte[] temp2 = this.getColumn(cube, side, 0);
-    byte[] temp3 = this.getRow(cube, side, 2);
-    byte[] temp4 = this.getColumn(cube, side, 2);
+  public void setColumn(byte[] current, byte[] positions, int side, int column, boolean reverse){ //column must be 0 or 2.
+    if(reverse){
+      current[(side*9) + (3*0) + column ] = positions[2];
+      current[(side*9) + (3*1) + column ] = positions[1];
+      current[(side*9) + (3*2) + column ] = positions[0];
+    }
+    else{
+      current[(side*9) + (3*0) + column ] = positions[0];
+      current[(side*9) + (3*1) + column ] = positions[1];
+      current[(side*9) + (3*2) + column ] = positions[2];
+    }
+  }
 
-    this.setColumn(cube, temp1, side, 2, false);
-    this.setRow(cube, temp2, side, 0, true);
-    this.setColumn(cube, temp3, side, 0, false);
-    this.setRow(cube, temp4, side, 2, true);
+  public void rotate(byte[] currentCube, int side, int direction){
+    byte[] temp1 = this.getRow(currentCube, side, 0);
+    byte[] temp2 = this.getColumn(currentCube, side, 0);
+    byte[] temp3 = this.getRow(currentCube, side, 2);
+    byte[] temp4 = this.getColumn(currentCube, side, 2);
+    this.setColumn(currentCube, temp1, side, 2, false);
+    this.setRow(currentCube, temp2, side, 0, true);
+    this.setColumn(currentCube, temp3, side, 0, false);
+    this.setRow(currentCube, temp4, side, 2, true);
   }
 
   public byte[] operate(byte[] oldCube, int operation) {
