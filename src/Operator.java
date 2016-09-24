@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 class Operator implements Constants {
 
-  private byte[] cube;
+  public byte[] cube;
 
   public Operator() {
     this.initCube();
@@ -37,7 +37,7 @@ class Operator implements Constants {
     switch (searchType) {
       case SEARCH_DFS: this.assembleDFS(); break;
       case SEARCH_BFS: this.assembleBFS(); break;
-      case SEARCH_IDS: this.assembleIDS(); break;
+      case SEARCH_IDS: this.assembleIDS(this.cube, 15); break;
       case SEARCH_AST: this.assembleAST(); break;
       default: break;
     }
@@ -87,9 +87,36 @@ class Operator implements Constants {
     return;
   }
 
-  private void assembleIDS() {
+  //cuando escribí este código, sólo Dios y yo sabíamos lo que estaba haciendo.
+  //Ahora solo Dios lo sabe.
+  public byte[] MY_DFS(byte[] the_Cube, int my_depth){
+    ArrayList<byte[]> visited = new ArrayList<byte[]>();
+    byte[] current_Cube = the_Cube;
 
+    if (!validate(current_Cube) && my_depth > 0){
+        ArrayList<byte[]> the_childs = getChildrens(current_Cube);
+        visited.add(current_Cube);
+        for(int y = 0; y< the_childs.size(); y++){
+            if(!visited.contains(the_childs.get(y))){
+                MY_DFS(the_childs.get(y), my_depth--);
+        }
+      }
+    }
+      return the_Cube;
+    }
+
+  public byte[] assembleIDS(byte[] the_Cube, int max_level){
+      byte[] ret_value = new byte[54];
+        if (validate(the_Cube)){
+          return the_Cube;
+        }
+
+        for (int y = 0; y< max_level ; y++){
+            ret_value = MY_DFS(the_Cube, y);
+        }
+        return ret_value;
   }
+
 
   private void assembleAST() {
 
@@ -260,14 +287,14 @@ class Operator implements Constants {
     return name;
   }
 
-  public void printCube(byte[] current) {
+  public void printCube(byte[] ncube) {
+    byte[] current = deepCopy(ncube);
     String strCube = "";
     String offset = "        ";
 
     // Print Top
     for (int i = 0; i < 9; i++) {
-      if (i % 3 == 0)
-        strCube += "\n" + offset;
+      if (i % 3 == 0) strCube += "\n" + offset;
       strCube += this.getColorName(current[((TOP * 9) + i)]) + " ";
     }
 
@@ -286,14 +313,37 @@ class Operator implements Constants {
 
     // Print Bottom
     for (int i = 0; i < 9; i++) {
-      if (i % 3 == 0 && i != 0)
-        strCube += "\n";
-      if (i % 3 == 0)
-        strCube += offset;
-
+      if (i % 3 == 0 && i != 0) strCube += "\n";
+      if (i % 3 == 0) strCube += offset;
       strCube += this.getColorName(current[((BOTTOM * 9) + i)]) + " ";
     }
 
-    System.out.println(strCube);
+    for (int w = 0; w < strCube.length(); w++){
+        char the_char = strCube.charAt(w);
+        switch(the_char){
+          case 'G':
+            System.out.print(ANSI_GREEN + the_char + ANSI_RESET);
+            break;
+          case 'R':
+              System.out.print(ANSI_RED + the_char + ANSI_RESET);
+              break;
+          case 'Y':
+              System.out.print(ANSI_YELLOW + the_char + ANSI_RESET);
+              break;
+          case 'B':
+            System.out.print(ANSI_BLUE + the_char + ANSI_RESET);
+                  break;
+          case 'W':
+            System.out.print(ANSI_WHITE + the_char + ANSI_RESET);
+                    break;
+          case 'O':
+            System.out.print(ANSI_CYAN + the_char + ANSI_RESET);
+                      break;
+          default:
+                    System.out.print(the_char);
+    }
+
+    }
+
   }
 }
