@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 class Operator implements Constants {
 
-  private byte[] cube;
+  byte[] cube;
 
   public Operator() {
     this.initCube();
@@ -36,7 +36,7 @@ class Operator implements Constants {
   public void assemble(int searchType) {
     switch (searchType) {
       case SEARCH_DFS: this.assembleDFS(); break;
-      case SEARCH_BFS: this.assembleBFS(); break;
+      case SEARCH_BFS: this.cube = this.assembleBFS(); break;
       case SEARCH_IDS: this.assembleIDS(); break;
       case SEARCH_AST: this.assembleAST(); break;
       default: break;
@@ -47,7 +47,7 @@ class Operator implements Constants {
 
   }
 
-  private void assembleBFS() {
+  private byte[] assembleBFS() {
     byte[] currentCube = this.cube;
     ArrayDeque<byte[]> queue = new ArrayDeque<>();
     ArrayList<byte[]> inList = new ArrayList<>();
@@ -59,32 +59,32 @@ class Operator implements Constants {
       aux++;
       inList.add(current);
       if(this.validate(current))
-      return;
+      return current;
       else{
-        ArrayList<byte[]> childs = this.getChildrens(current);
-        for (byte[] c : childs ) {
-          for (byte[] cubeInList : inList) {
-            if(!cubeInList.equals(c)){
-              if(this.validate(c))
-              return;
-              else{
-                try{
-                  queue.add(c);
-                }catch(Exception e){
-                  System.out.println("Memory Out!");
-                }
-                if(queue.size()%aux==0){
-                  level++;
-                  aux *=6;
-                }
+        try{
+          ArrayList<byte[]> childs = this.getChildrens(current);
+          for (byte[] c : childs ) {
+            for (byte[] cubeInList : inList) {
+              if(!cubeInList.equals(c)){
+                if(this.validate(c))
+                  return c;
+                  else{
+                    queue.add(c);
+                    if(queue.size()%aux==0){
+                        level++;
+                        aux *=6;
+                    }
+                  }
+                break;
               }
-              break;
             }
           }
+        }catch(Exception e){
+          System.out.println("Out of Memory!");
         }
       }
     }
-    return;
+    return currentCube;
   }
 
   private void assembleIDS() {
