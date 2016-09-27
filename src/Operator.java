@@ -7,7 +7,7 @@ import java.util.Iterator;
 class Operator implements Constants {
 
   public Cube cube;
-  public byte maxDepth;
+  public int maxDepth;
 
   public Operator() {
     this.maxDepth = 0;
@@ -15,6 +15,7 @@ class Operator implements Constants {
   }
 
   public void disarm(int operations) {
+    this.maxDepth = operations;
     for (int i = 0; i < operations; i++) {
       int operation = ThreadLocalRandom.current().nextInt(1, OPERATIONS + 1);
       this.cube = Cube.operate(this.cube, operation);
@@ -39,6 +40,9 @@ class Operator implements Constants {
 
     while(! stack.empty()) {
         Cube current = stack.pop();
+        if (current.depth > this.maxDepth * 3)
+          continue;
+
         Iterator<Cube> childrens = this.getChildrens(current).iterator();
 
         while(childrens.hasNext()) {

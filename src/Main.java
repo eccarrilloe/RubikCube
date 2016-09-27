@@ -4,7 +4,7 @@ class Main implements Constants {
 
     int searchType = SEARCH_DFS;
     try {
-      switch (args[0]) {
+      switch (args[0].toLowerCase()) {
         case "DFS": searchType = SEARCH_DFS; break;
         case "BFS": searchType = SEARCH_BFS; break;
         case "IDS": searchType = SEARCH_IDS; break;
@@ -20,7 +20,7 @@ class Main implements Constants {
     Cube.printCube(operator.cube);
 
     System.out.println("--------- CUBE DISARMED ---------");
-    int operations = 1;
+    int operations = 2;
     operator.disarm(operations);
     System.out.println("-> Cube after " + operations + " operations:\n");
     Cube.printCube(operator.cube);
@@ -28,7 +28,7 @@ class Main implements Constants {
     System.out.println("--------- CUBE SOLVED -----------");
     long time_start;
     time_start = System.currentTimeMillis();
-    operator.assemble(SEARCH_DFS);
+    operator.assemble(searchType);
     long total_time = System.currentTimeMillis() - time_start;
     Cube.printCube(operator.cube);
     System.out.println("Task has taken "+ total_time + " milliseconds");
