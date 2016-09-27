@@ -2,12 +2,11 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.Stack;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
-import java.util.Queue;
-import java.util.Arrays;
+import java.util.Iterator;
 
 class Operator implements Constants {
 
-  private byte[] cube;
+  public byte[] cube;
 
   public Operator() {
     this.initCube();
@@ -44,7 +43,28 @@ class Operator implements Constants {
   }
 
   private void assembleDFS() {
+    ArrayList<byte[]> states = new ArrayList<>(1000000);
+    Stack<byte[]> stack = new Stack<>();
+    states.add(this.cube);
+    stack.push(this.cube);
 
+    while(! stack.empty()) {
+        byte[] current = stack.pop();
+        //this.printCube(current);
+        Iterator<byte[]> childrens = this.getChildrens(current).iterator();
+        while(childrens.hasNext()) {
+          byte[] child = childrens.next();
+          if (this.validate(child)) {
+              this.cube = child;
+              return;
+          }
+
+          if (! states.contains(child)) {
+            states.add(child);
+            stack.push(child);
+          }
+        }
+    }
   }
 
   private void assembleBFS() {
