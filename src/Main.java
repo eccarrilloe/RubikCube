@@ -29,8 +29,13 @@ class Main implements Constants {
 
     System.out.println("--------- CUBE SOLVED -----------");
     Cube.printCube(operator.cube);
-    System.out.println("SOLVED in: " + total_time + " miliseconds." );
-    System.out.println("SOLUTION IN DEPTH: " + operator.cube.depth);
-    System.out.println("MAX NODE EXPANDED: " + operator.maxNodesExpanded);
+    if (operator.validate(operator.cube)) {
+      System.out.println("SOLVED in: " + total_time + " miliseconds." );
+      System.out.println("SOLUTION IN DEPTH: " + operator.cube.depth);
+    } else {
+      System.out.println("SEARCH TIME: " + total_time + " miliseconds." );
+      System.out.println("MAX SEARCH DEPTH: " + operator.maxDepth);
+    }
+    System.out.println("NODES EXPANDED: " + operator.maxNodesExpanded);
   }
 }

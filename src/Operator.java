@@ -11,15 +11,17 @@ class Operator implements Constants {
   public Cube cube;
   public int maxDepth;
   public int maxNodesExpanded;
+  public ArrayList<Cube> visited;
 
   public Operator() {
     this.maxDepth = 0;
     this.maxNodesExpanded = 0;
+    this.visited = new ArrayList<>();
     this.cube = new Cube();
   }
 
   public void disarm(int operations) {
-    this.maxDepth = operations;
+    this.maxDepth = operations < 15 ? operations : 15;
     for (int i = 0; i < operations; i++) {
       int operation = ThreadLocalRandom.current().nextInt(1, OPERATIONS + 1);
       this.cube = Cube.operate(this.cube, operation);
@@ -118,53 +120,78 @@ class Operator implements Constants {
     return true;
   }
 
-  public void MY_DFS(Cube the_Cube, int my_depth){
-     int the_limit  = (int) Math.pow(6, my_depth);
-     System.out.println(" possible states:" + the_limit);
-     Cube current_Cube = the_Cube;
-     Stack<Cube> visited = new Stack<>();
-     Stack<Cube> the_Q = new Stack<>();
+  public ArrayList<Cube> IterativeDFS(Cube the_Cube, int currentMaxDepth) {
+     Stack<Cube> stack = new Stack<>();
+     ArrayList<Cube> leaves = new ArrayList<>();
+     this.visited.add(the_Cube);
+     stack.push(the_Cube);
 
-     if(this.validate(the_Cube) && my_depth == 0){
-       System.out.println(" valid cube and depth = 0");
-     }
+     while(! stack.isEmpty()) {
+       Cube currentCube = stack.remove(0);
 
-    the_Q.push(current_Cube);
+       Iterator<Cube> children = getChildrens(currentCube, false).iterator();
 
-    while(!the_Q.isEmpty() && my_depth > -1){
+        while (children.hasNext()) {
+          Cube currentChild = children.next();
+          currentChild.depth = currentCube.depth + 1;
 
-      current_Cube = the_Q.remove(0);
+          if (this.validate(currentChild)) {
+              leaves = new ArrayList<>();
+              leaves.add(currentChild);
+              return leaves;
+          }
 
-      if(this.validate(current_Cube)){
-
-        System.out.println("ANSWER FOUNDED \n");
-        Cube.printCube(current_Cube);
-        break;
-      }
-      else{
-        ArrayList<Cube> children = getChildrens(current_Cube, false);
-        for(int x = 0; x < children.size(); x++){
-            Cube current_Child = children.get(x);
-            if(!visited.contains(current_Child)){
-              the_Q.push(current_Child);
-            }
+          if(! this.visited.contains(currentChild) && currentChild.depth < currentMaxDepth) {
+            stack.push(currentChild);
+            this.visited.add(currentChild);
+          } else if (currentChild.depth == currentMaxDepth) {
+            leaves.add(currentChild);
+          }
         }
-        visited.push(current_Cube);
-        the_limit--;
-        my_depth--;
-        System.out.println("\n  Depth" + my_depth);
-        System.out.println("Current_cube: \n");
-        Cube.printCube(current_Cube);
-        System.out.println("Queue size: " + the_Q.size());
-        System.out.println("visited size: " + visited.size());
-
       }
-    }
+      return leaves;
   }
 
-  public void assembleIDS(){
-      MY_DFS(this.cube, 15);
+  public void assembleIDS() {
+    this.cube.depth = 0;
+    int depthIteration = 2, i = 0;
+    ArrayDeque<Cube> leaf = new ArrayDeque<>();
+    this.visited = new ArrayList<>();
+    leaf.push(this.cube);
 
+    while (! leaf.isEmpty()) {
+      Cube currentCube = leaf.pop();
+
+      if (this.validate(currentCube)) {
+        this.cube = currentCube;
+        this.maxNodesExpanded = this.visited.size();
+
+        return;
+      }
+
+      int nextDepth = currentCube.depth + depthIteration > this.maxDepth ? this.maxDepth : currentCube.depth + depthIteration;
+      ArrayList<Cube> leaves = IterativeDFS(currentCube, nextDepth);
+      System.out.println(currentCube.depth);
+      System.out.println(leaves.size());
+
+      if (leaves.size() == 1 && this.validate(leaves.get(0))) {
+        this.cube = leaves.get(0);
+        this.maxNodesExpanded = this.visited.size();
+        return;
+      }
+
+      Iterator<Cube> it = leaves.iterator();
+      while (it.hasNext()) {
+        Cube leave = it.next();
+        leaf.push(leave);
+      }
+
+      i += depthIteration;
+      if (i > this.maxDepth) {
+        break;
+      }
+    }
+    System.out.println(leaf.size());
   }
 
   private void assembleAST() {
@@ -188,7 +215,7 @@ class Operator implements Constants {
           return;
         }
         for(Cube visit : visited){
-          if(!compare(visit, c)){
+          if(! compare(visit, c)) {
             //Cube.printCube(c);
             //System.out.println("Heuristic: " + c.heuristic);
             priorityQueue.add(c);

@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd bin
-java -Xms1G -Xmx4G Main
+java -Xmx4G Main

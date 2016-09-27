@@ -262,8 +262,8 @@ class Cube implements Constants, Comparator<Cube> {
       if (i % 3 == 0) strCube += offset;
       strCube += Cube.getColorName(current.cube[((BOTTOM * 9) + i)]) + " ";
     }
-    System.out.println(strCube);
-  /*  for (int w = 0; w < strCube.length(); w++){
+    // System.out.println(strCube);
+    for (int w = 0; w < strCube.length(); w++){
       char the_char = strCube.charAt(w);
       switch(the_char){
         case 'G':
@@ -287,7 +287,7 @@ class Cube implements Constants, Comparator<Cube> {
         default:
         System.out.print(the_char);
       }
-    }*/
+    }
     System.out.println("\n");
   }
 }
