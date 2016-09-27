@@ -39,7 +39,7 @@ class Operator implements Constants {
     switch (searchType) {
       case SEARCH_DFS: this.assembleDFS(); break;
       case SEARCH_BFS: this.cube = this.assembleBFS(); break;
-      case SEARCH_IDS: this.MY_DFS(this.cube, 15); break;
+      case SEARCH_IDS: this.assembleIDS(); break;
       case SEARCH_AST: this.assembleAST(); break;
       default: break;
     }
@@ -146,8 +146,8 @@ class Operator implements Constants {
 
   public void assembleIDS(){
 
-      MY_DFS(this.cube, 150);
-      //IDDFS(this.cube, 15);
+      MY_DFS(this.cube, 15);
+      
   }
 
   private void assembleAST() {
