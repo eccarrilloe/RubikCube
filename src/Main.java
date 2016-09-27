@@ -1,17 +1,37 @@
 
 class Main implements Constants {
   public static void main(String[] args) {
-    Operator op = new Operator();
-    op.printCube(op.cube);
-    op.disarm(15);
-    System.out.println("Disarmed Cube");
-    op.printCube(op.cube);
-    System.out.println("Solved Cube");
-    long time_start, time_end;
+
+
+    int searchType = SEARCH_DFS;
+    try {
+      switch (args[0]) {
+        case "DFS": searchType = SEARCH_DFS; break;
+        case "BFS": searchType = SEARCH_BFS; break;
+        case "IDS": searchType = SEARCH_IDS; break;
+        case "AST": searchType = SEARCH_AST; break;
+        default: break;
+      }
+    } catch (Exception e) {
+    }
+
+    Operator operator = new Operator();
+
+    System.out.println("----------- CUBE INIT -----------");
+    Cube.printCube(operator.cube);
+
+    System.out.println("--------- CUBE DISARMED ---------");
+    int operations = 3;
+    operator.disarm(operations);
+    System.out.println("-> Cube after " + operations + " operations:\n");
+    Cube.printCube(operator.cube);
+
+    System.out.println("--------- CUBE SOLVED -----------");
+    long time_start;
     time_start = System.currentTimeMillis();
-    op.assemble(SEARCH_BFS);
-    op.printCube(op.cube);
-    time_end = System.currentTimeMillis();
-    System.out.println("the task has taken "+ ( time_end - time_start ) + " milliseconds");
+    operator.assemble(SEARCH_BFS);
+    long total_time = System.currentTimeMillis() - time_start;
+    Cube.printCube(operator.cube);
+    System.out.println("Task has taken "+ total_time + " milliseconds");
   }
 }
