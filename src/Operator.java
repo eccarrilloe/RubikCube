@@ -31,13 +31,15 @@ class Operator implements Constants {
       int operation = ThreadLocalRandom.current().nextInt(1, OPERATIONS + 1);
       this.cube = this.operate(this.cube, operation);
     }
+    System.out.println("The cube after " + operations + " operations \n");
+    printCube(this.cube);
   }
 
   public void assemble(int searchType) {
     switch (searchType) {
       case SEARCH_DFS: this.assembleDFS(); break;
       case SEARCH_BFS: this.assembleBFS(); break;
-      case SEARCH_IDS: this.assembleIDS(this.cube, 15); break;
+      case SEARCH_IDS: this.assembleIDS(); break;
       case SEARCH_AST: this.assembleAST(); break;
       default: break;
     }
@@ -87,36 +89,69 @@ class Operator implements Constants {
     return;
   }
 
-  //cuando escribí este código, sólo Dios y yo sabíamos lo que estaba haciendo.
-  //Ahora solo Dios lo sabe.
-  public byte[] MY_DFS(byte[] the_Cube, int my_depth){
-    ArrayList<byte[]> visited = new ArrayList<byte[]>();
-    byte[] current_Cube = the_Cube;
 
-    if (!validate(current_Cube) && my_depth > 0){
-        ArrayList<byte[]> the_childs = getChildrens(current_Cube);
-        visited.add(current_Cube);
-        for(int y = 0; y< the_childs.size(); y++){
-            if(!visited.contains(the_childs.get(y))){
-                MY_DFS(the_childs.get(y), my_depth--);
-        }
-      }
-    }
-      return the_Cube;
-    }
 
-  public byte[] assembleIDS(byte[] the_Cube, int max_level){
-      byte[] ret_value = new byte[54];
-        if (validate(the_Cube)){
-          return the_Cube;
-        }
 
-        for (int y = 0; y< max_level ; y++){
-            ret_value = MY_DFS(the_Cube, y);
-        }
-        return ret_value;
+  public byte[] LimitDFS(byte[] cube, int the_depth){
+
+    return null;
+
+
   }
+  //public boolean natural_failure = false;
 
+  public void MY_DFS(byte[] the_Cube, int my_depth){
+     int the_limit  = (int) Math.pow(6, my_depth);
+     System.out.println(" possible states:" + the_limit);
+     byte[] current_Cube = the_Cube;
+     Stack<byte[]> visited = new Stack<byte[]>();
+     Stack<byte[]> the_Q = new Stack<byte[]>();
+
+     if(validate(the_Cube) && my_depth == 0){
+       System.out.println(" valid cube and depth = 0");
+     }
+
+    the_Q.push(current_Cube);
+
+    while(!the_Q.isEmpty() && my_depth > -1){
+
+      current_Cube = the_Q.remove(0);
+
+      if(validate(current_Cube)){
+
+        System.out.println("ANSWER FOUNDED \n");
+        printCube(current_Cube);
+        break;
+      }
+      else{
+        ArrayList<byte[]> children = getChildrens(current_Cube);
+        for(int x = 0; x < children.size(); x++){
+            byte[] current_Child = children.get(x);
+            if(!visited.contains(current_Child)){
+              the_Q.push(current_Child);
+            }
+        }
+        visited.push(current_Cube);
+        the_limit--;
+        my_depth--;
+        System.out.println("\n  Depth" + my_depth);
+        System.out.println("Current_cube: \n");
+        printCube(current_Cube);
+        System.out.println("Queue size: " + the_Q.size());
+        System.out.println("visited size: " + visited.size());
+
+      }
+
+
+    }
+
+    }
+
+  public void assembleIDS(){
+
+      MY_DFS(this.cube, 150);
+      //IDDFS(this.cube, 15);
+  }
 
   private void assembleAST() {
 
@@ -346,4 +381,5 @@ class Operator implements Constants {
     }
 
   }
+
 }
