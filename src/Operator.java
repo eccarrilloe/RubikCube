@@ -76,40 +76,41 @@ class Operator implements Constants {
   }
 
   private void assembleBFS() {
-    Cube currentCube = this.cube;
-    ArrayDeque<Cube> queue = new ArrayDeque<>();
-    ArrayList<Cube> states = new ArrayList<>();
-    int aux = 6, level = 0, elementsInLevel = 0;
-    queue.add(currentCube);
+    this.cube.depth = 0;
     Cube current = new Cube();
+    ArrayList<Cube> states = new ArrayList<>();
+    ArrayDeque<Cube> queue = new ArrayDeque<>();
+    queue.add(this.cube);
+
     while(! queue.isEmpty()) {
       current = queue.remove();
       states.add(current);
+
       if(this.validate(current)) {
         this.cube = current;
+        this.maxNodesExpanded = states.size();
         return;
-      } else {
-        ArrayList<Cube> childs = this.getChildrens(current, false);
-        for (Cube c : childs ) {
-          elementsInLevel++;
-          if(this.validate(c)) {
-            this.cube = c;
-            this.maxNodesExpanded = states.size();
-            return;
-          }
-          else{
-            if(! states.contains(c)) {
-                queue.add(c);
-                if(elementsInLevel == aux){
-                  aux *= 6;
-                  level++;
-                }
-            }
-          }
+      }
+
+      Iterator<Cube> childs = this.getChildrens(current, false).iterator();
+      while (childs.hasNext()) {
+        Cube child = childs.next();
+        child.depth = current.depth + 1;
+
+        if(this.validate(child)) {
+          this.cube = child;
+          this.maxNodesExpanded = states.size();
+          return;
+        }
+
+        if(! states.contains(child)) {
+          queue.add(child);
         }
       }
     }
-    this.cube = currentCube;
+
+    this.cube = current;
+    this.maxNodesExpanded = states.size();
   }
 
   public boolean compare(Cube one, Cube two){
@@ -154,13 +155,14 @@ class Operator implements Constants {
 
   public void assembleIDS() {
     this.cube.depth = 0;
-    int depthIteration = 2, i = 0;
+    int depthIteration = 5;
     ArrayDeque<Cube> leaf = new ArrayDeque<>();
+    Cube currentCube = new Cube();
     this.visited = new ArrayList<>();
     leaf.push(this.cube);
 
     while (! leaf.isEmpty()) {
-      Cube currentCube = leaf.pop();
+      currentCube = leaf.pop();
 
       if (this.validate(currentCube)) {
         this.cube = currentCube;
@@ -171,8 +173,6 @@ class Operator implements Constants {
 
       int nextDepth = currentCube.depth + depthIteration > this.maxDepth ? this.maxDepth : currentCube.depth + depthIteration;
       ArrayList<Cube> leaves = IterativeDFS(currentCube, nextDepth);
-      System.out.println(currentCube.depth);
-      System.out.println(leaves.size());
 
       if (leaves.size() == 1 && this.validate(leaves.get(0))) {
         this.cube = leaves.get(0);
@@ -185,13 +185,9 @@ class Operator implements Constants {
         Cube leave = it.next();
         leaf.push(leave);
       }
-
-      i += depthIteration;
-      if (i > this.maxDepth) {
-        break;
-      }
     }
-    System.out.println(leaf.size());
+    this.cube = currentCube;
+    this.maxNodesExpanded = this.visited.size();
   }
 
   private void assembleAST() {
