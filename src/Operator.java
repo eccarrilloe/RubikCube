@@ -167,7 +167,7 @@ class Operator implements Constants {
   public void assembleIDS(){
 
       MY_DFS(this.cube, 15);
-      
+
   }
 
   private void assembleAST() {
@@ -369,8 +369,6 @@ class Operator implements Constants {
       strCube += this.getColorName(current[((BOTTOM * 9) + i)]) + " ";
     }
 
-    System.out.println(strCube);
-/*
     for (int w = 0; w < strCube.length(); w++){
       char the_char = strCube.charAt(w);
       switch(the_char){
@@ -396,7 +394,7 @@ class Operator implements Constants {
         System.out.print(the_char);
       }
 
-    }*/
+    }
 
   }
 
