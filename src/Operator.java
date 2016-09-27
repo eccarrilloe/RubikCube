@@ -30,12 +30,14 @@ class Operator implements Constants {
       int operation = ThreadLocalRandom.current().nextInt(1, OPERATIONS + 1);
       this.cube = this.operate(this.cube, operation);
     }
+    System.out.println("The cube after " + operations + " operations \n");
+    printCube(this.cube);
   }
 
   public void assemble(int searchType) {
     switch (searchType) {
       case SEARCH_DFS: this.assembleDFS(); break;
-      case SEARCH_BFS: this.assembleBFS(); break;
+      case SEARCH_BFS: this.cube = this.assembleBFS(); break;
       case SEARCH_IDS: this.assembleIDS(); break;
       case SEARCH_AST: this.assembleAST(); break;
       default: break;
@@ -67,48 +69,105 @@ class Operator implements Constants {
     }
   }
 
-  private void assembleBFS() {
+  private byte[] assembleBFS() {
     byte[] currentCube = this.cube;
     ArrayDeque<byte[]> queue = new ArrayDeque<>();
-    ArrayList<byte[]> inList = new ArrayList<>();
-    int aux = 1, level = 0, elementsInLevel = 1, paux=1;
+    Stack<byte[]> visited = new Stack<>();
+    int aux = 6, level = 0, elementsInLevel = 0;
     queue.add(currentCube);
     byte[] current = new byte[54];
     while(!queue.isEmpty()){
       current = queue.remove();
-      aux++;
-      inList.add(current);
+      try{
+          visited.add(current);
+      }catch(Exception e){
+        System.out.println("Memory out!");
+      }
       if(this.validate(current))
-      return;
+      return current;
       else{
         ArrayList<byte[]> childs = this.getChildrens(current);
+        elementsInLevel+=6;
         for (byte[] c : childs ) {
-          for (byte[] cubeInList : inList) {
-            if(!cubeInList.equals(c)){
-              if(this.validate(c))
-              return;
-              else{
-                try{
-                  queue.add(c);
-                }catch(Exception e){
-                  System.out.println("Memory Out!");
-                }
-                if(queue.size()%aux==0){
+          if(this.validate(c))
+          return c;
+          else{
+          for (byte[] cubeInList : visited){
+            if(!compare(cubeInList, c)){
+                queue.add(c);
+                if(elementsInLevel==aux){
+                  aux*=6;
+                  System.out.println("Level: " + level + " Queue size: " + queue.size() + " elementsInLevel: " + aux + " visited size: " + visited.size());
                   level++;
-                  aux *=6;
                 }
               }
-              break;
             }
           }
+      //    if(queue.size()%1000==0) System.out.println("Queue size: " + queue.size() +" visited size: " + visited.size());
+
         }
       }
     }
-    return;
+    return currentCube;
   }
 
-  private void assembleIDS() {
+  public boolean compare(byte[] one, byte[] two){
+    for (int i=0; i<one.length; i++ ) {
+      if(!(one[i]==two[i])) return false;
+    }
+    return true;
+  }
 
+  //public boolean natural_failure = false;
+
+  public void MY_DFS(byte[] the_Cube, int my_depth){
+     int the_limit  = (int) Math.pow(6, my_depth);
+     System.out.println(" possible states:" + the_limit);
+     byte[] current_Cube = the_Cube;
+     Stack<byte[]> visited = new Stack<byte[]>();
+     Stack<byte[]> the_Q = new Stack<byte[]>();
+
+     if(validate(the_Cube) && my_depth == 0){
+       System.out.println(" valid cube and depth = 0");
+     }
+
+    the_Q.push(current_Cube);
+
+    while(!the_Q.isEmpty() && my_depth > -1){
+
+      current_Cube = the_Q.remove(0);
+
+      if(validate(current_Cube)){
+
+        System.out.println("ANSWER FOUNDED \n");
+        printCube(current_Cube);
+        break;
+      }
+      else{
+        ArrayList<byte[]> children = getChildrens(current_Cube);
+        for(int x = 0; x < children.size(); x++){
+            byte[] current_Child = children.get(x);
+            if(!visited.contains(current_Child)){
+              the_Q.push(current_Child);
+            }
+        }
+        visited.push(current_Cube);
+        the_limit--;
+        my_depth--;
+        System.out.println("\n  Depth" + my_depth);
+        System.out.println("Current_cube: \n");
+        printCube(current_Cube);
+        System.out.println("Queue size: " + the_Q.size());
+        System.out.println("visited size: " + visited.size());
+
+      }
+    }
+    }
+
+  public void assembleIDS(){
+
+      MY_DFS(this.cube, 15);
+      
   }
 
   private void assembleAST() {
@@ -286,8 +345,7 @@ class Operator implements Constants {
 
     // Print Top
     for (int i = 0; i < 9; i++) {
-      if (i % 3 == 0)
-        strCube += "\n" + offset;
+      if (i % 3 == 0) strCube += "\n" + offset;
       strCube += this.getColorName(current[((TOP * 9) + i)]) + " ";
     }
 
@@ -306,14 +364,40 @@ class Operator implements Constants {
 
     // Print Bottom
     for (int i = 0; i < 9; i++) {
-      if (i % 3 == 0 && i != 0)
-        strCube += "\n";
-      if (i % 3 == 0)
-        strCube += offset;
-
+      if (i % 3 == 0 && i != 0) strCube += "\n";
+      if (i % 3 == 0) strCube += offset;
       strCube += this.getColorName(current[((BOTTOM * 9) + i)]) + " ";
     }
 
     System.out.println(strCube);
+/*
+    for (int w = 0; w < strCube.length(); w++){
+      char the_char = strCube.charAt(w);
+      switch(the_char){
+        case 'G':
+        System.out.print(ANSI_GREEN + the_char + ANSI_RESET);
+        break;
+        case 'R':
+        System.out.print(ANSI_RED + the_char + ANSI_RESET);
+        break;
+        case 'Y':
+        System.out.print(ANSI_YELLOW + the_char + ANSI_RESET);
+        break;
+        case 'B':
+        System.out.print(ANSI_BLUE + the_char + ANSI_RESET);
+        break;
+        case 'W':
+        System.out.print(ANSI_WHITE + the_char + ANSI_RESET);
+        break;
+        case 'O':
+        System.out.print(ANSI_CYAN + the_char + ANSI_RESET);
+        break;
+        default:
+        System.out.print(the_char);
+      }
+
+    }*/
+
   }
+
 }
