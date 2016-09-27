@@ -1,0 +1,9 @@
+#!/bin/bash
+
+OPT="DFS"
+if [[ -n "$OPT" ]]; then
+  OPT="$1"
+fi
+
+cd bin
+java Main "$OPT"
