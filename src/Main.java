@@ -1,37 +1,36 @@
+import java.util.Scanner;
 
 class Main implements Constants {
   public static void main(String[] args) {
-
-
-    int searchType = SEARCH_DFS;
-    try {
-      switch (args[0].toLowerCase()) {
-        case "DFS": searchType = SEARCH_DFS; break;
-        case "BFS": searchType = SEARCH_BFS; break;
-        case "IDS": searchType = SEARCH_IDS; break;
-        case "AST": searchType = SEARCH_AST; break;
-        default: break;
-      }
-    } catch (Exception e) {
-    }
 
     Operator operator = new Operator();
 
     System.out.println("----------- CUBE INIT -----------");
     Cube.printCube(operator.cube);
 
-    System.out.println("--------- CUBE DISARMED ---------");
-    int operations = 2;
+    Scanner in = new Scanner(System.in);
+    System.out.print("Operations?: ");
+    int operations = in.nextInt();
     operator.disarm(operations);
-    System.out.println("-> Cube after " + operations + " operations:\n");
+    System.out.println("--------- CUBE DISARMED ---------");
     Cube.printCube(operator.cube);
 
-    System.out.println("--------- CUBE SOLVED -----------");
-    long time_start;
-    time_start = System.currentTimeMillis();
-    operator.assemble(searchType);
+    System.out.println("Search methods: (0 - DFS, 1 - BFS, 2 - IDS, 3 - A*)");
+    System.out.print("Search method?: ");
+    int method = in.nextInt();
+    while (method < 0 || method > 3) {
+      System.out.print("Search method?: ");
+      method = in.nextInt();
+    }
+
+    long time_start = System.currentTimeMillis();
+    operator.assemble(method);
     long total_time = System.currentTimeMillis() - time_start;
+
+    System.out.println("--------- CUBE SOLVED -----------");
     Cube.printCube(operator.cube);
-    System.out.println("Task has taken "+ total_time + " milliseconds");
+    System.out.println("SOLVED in: " + total_time + " miliseconds." );
+    System.out.println("SOLUTION IN DEPTH: " + operator.cube.depth);
+    System.out.println("MAX NODE EXPANDED: " + operator.maxNodesExpanded);
   }
 }

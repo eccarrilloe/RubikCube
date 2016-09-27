@@ -3,9 +3,11 @@ import java.util.Comparator;
 class Cube implements Constants, Comparator<Cube> {
   public byte[] cube;
   public int depth, heuristic;
+  public int[] steps;
 
   public Cube() {
     this.cube = new byte[54];
+    this.steps = new int[20];
     this.depth = 0;
     this.heuristic = 0;
 
@@ -20,7 +22,11 @@ class Cube implements Constants, Comparator<Cube> {
 
   public Cube(Cube other) {
     this.cube = new byte[54];
+    this.steps = new int[20];
     this.depth = other.depth + 1;
+
+    for (int i = 0; i < other.steps.length; i++)
+      this.steps[i] = other.steps[i];
 
     for (int i = 0; i < 54; i++)
       this.cube[i] = other.cube[i];
@@ -31,10 +37,22 @@ class Cube implements Constants, Comparator<Cube> {
     byte[] temp2 = Cube.getColumn(current, side, 0);
     byte[] temp3 = Cube.getRow(current, side, 2);
     byte[] temp4 = Cube.getColumn(current, side, 2);
-    Cube.setColumn(current, temp1, side, 2, false);
-    Cube.setRow(current, temp2, side, 0, true);
-    Cube.setColumn(current, temp3, side, 0, false);
-    Cube.setRow(current, temp4, side, 2, true);
+    switch(direction){
+      case ROTATE_DER:
+        Cube.setColumn(current, temp1, side, 2, false);
+        Cube.setRow(current, temp2, side, 0, true);
+        Cube.setColumn(current, temp3, side, 0, false);
+        Cube.setRow(current, temp4, side, 2, true);
+        break;
+      case ROTATE_IZQ:
+        Cube.setColumn(current, temp1, side, 0, true);
+        Cube.setRow(current, temp2, side, 2, false);
+        Cube.setColumn(current, temp3, side, 2, true);
+        Cube.setRow(current, temp4, side, 0, false);
+        break;
+      default:
+        break;
+      }
   }
 
   public static byte[] getRow(Cube current, int side, int row) {
@@ -81,24 +99,41 @@ class Cube implements Constants, Comparator<Cube> {
   }
 
   public static Cube operate(Cube oldCube, int operation) {
+
     Cube currentCube = new Cube(oldCube);
     byte[] tmp = new byte[3];
     switch(operation){
-        case ROTATE_FRONT_DER:
+      case ROTATE_FRONT_DER:
         tmp = Cube.getRow(currentCube, TOP, 2);
         Cube.setRow(currentCube, Cube.getColumn(currentCube, LEFT, 2), TOP, 2, true);
         Cube.setColumn(currentCube, Cube.getRow(currentCube, BOTTOM, 0), LEFT, 2, false);
         Cube.setRow(currentCube, Cube.getColumn(currentCube, RIGHT, 0), BOTTOM, 0, true);
         Cube.setColumn(currentCube, tmp, RIGHT, 0, false);
-        Cube.rotate(currentCube, FRONT, 1); //Direction not implemented yet
+        Cube.rotate(currentCube, FRONT, ROTATE_DER); //Direction not implemented yet
         break;
+      case ROTATE_FRONT_IZQ:
+          tmp = Cube.getRow(currentCube, TOP, 2);
+          Cube.setRow(currentCube, Cube.getColumn(currentCube, RIGHT, 0), TOP, 2, false);
+          Cube.setColumn(currentCube, Cube.getRow(currentCube, BOTTOM, 0), RIGHT, 0, true);
+          Cube.setRow(currentCube, Cube.getColumn(currentCube, LEFT, 2), BOTTOM, 0, false);
+          Cube.setColumn(currentCube, tmp, LEFT, 2, true);
+          Cube.rotate(currentCube, FRONT, ROTATE_IZQ); //Direction implemented already.
+          break;
       case ROTATE_BACK_DER:
         tmp = Cube.getRow(currentCube, TOP, 0);
         Cube.setRow(currentCube, Cube.getColumn(currentCube, LEFT, 0), TOP, 0, true);
         Cube.setColumn(currentCube, Cube.getRow(currentCube, BOTTOM, 2), LEFT, 0,false);
         Cube.setRow(currentCube, Cube.getColumn(currentCube, RIGHT, 2), BOTTOM, 2, true);
         Cube.setColumn(currentCube, tmp, RIGHT, 2, false);
-        Cube.rotate(currentCube, BACK, 1); //Direction not implemented yet
+        Cube.rotate(currentCube, BACK, ROTATE_DER); //Direction not implemented yet
+        break;
+      case ROTATE_BACK_IZQ:
+        tmp = Cube.getRow(currentCube, TOP, 0);
+        Cube.setRow(currentCube, Cube.getColumn(currentCube, RIGHT, 2), TOP, 0, false);
+        Cube.setColumn(currentCube, Cube.getRow(currentCube, BOTTOM, 2), RIGHT, 2, true);
+        Cube.setRow(currentCube, Cube.getColumn(currentCube, LEFT, 0), BOTTOM, 2, false);
+        Cube.setColumn(currentCube, tmp, LEFT, 0, true);
+        Cube.rotate(currentCube, BACK, ROTATE_IZQ);
         break;
       case ROW_TOP_DER:
         tmp = Cube.getRow(currentCube, FRONT, 0);
@@ -106,7 +141,15 @@ class Cube implements Constants, Comparator<Cube> {
         Cube.setRow(currentCube, Cube.getRow(currentCube, BACK, 0), LEFT, 0, false);
         Cube.setRow(currentCube, Cube.getRow(currentCube, RIGHT, 0), BACK, 0, false);
         Cube.setRow(currentCube, tmp, RIGHT, 0, false);
-        Cube.rotate(currentCube, TOP, 1);
+        Cube.rotate(currentCube, TOP, ROTATE_DER);
+        break;
+      case ROW_TOP_IZQ:
+        tmp = Cube.getRow(currentCube, FRONT, 0);
+        Cube.setRow(currentCube, Cube.getRow(currentCube, RIGHT, 0), FRONT, 0, false);
+        Cube.setRow(currentCube, Cube.getRow(currentCube, BACK, 0), RIGHT, 0, false);
+        Cube.setRow(currentCube, Cube.getRow(currentCube, LEFT, 0), BACK, 0, false);
+        Cube.setRow(currentCube, tmp, LEFT, 0, false);
+        Cube.rotate(currentCube, TOP, ROTATE_IZQ);
         break;
       case ROW_BOTTOM_DER:
         tmp = Cube.getRow(currentCube, FRONT, 2);
@@ -114,7 +157,15 @@ class Cube implements Constants, Comparator<Cube> {
         Cube.setRow(currentCube, Cube.getRow(currentCube, BACK, 2), LEFT, 2, false);
         Cube.setRow(currentCube, Cube.getRow(currentCube, RIGHT, 2), BACK, 2, false);
         Cube.setRow(currentCube, tmp, RIGHT, 2, false);
-        Cube.rotate(currentCube, BOTTOM, 1);
+        Cube.rotate(currentCube, BOTTOM, ROTATE_DER);
+        break;
+      case ROW_BOTTOM_IZQ:
+        tmp = Cube.getRow(currentCube, FRONT, 2);
+        Cube.setRow(currentCube, Cube.getRow(currentCube, RIGHT, 2), FRONT, 2, false);
+        Cube.setRow(currentCube, Cube.getRow(currentCube, BACK, 2), RIGHT, 2, false);
+        Cube.setRow(currentCube, Cube.getRow(currentCube, LEFT, 2), BACK, 2, false);
+        Cube.setRow(currentCube, tmp, LEFT, 2, false);
+        Cube.rotate(currentCube, BOTTOM, ROTATE_IZQ);
         break;
       case COL_LEFT_UP:
         tmp = Cube.getColumn(currentCube, FRONT, 0);
@@ -122,7 +173,15 @@ class Cube implements Constants, Comparator<Cube> {
         Cube.setColumn(currentCube, Cube.getColumn(currentCube, BACK, 2), BOTTOM, 0, true);
         Cube.setColumn(currentCube, Cube.getColumn(currentCube, TOP, 0), BACK, 2, true);
         Cube.setColumn(currentCube, tmp, TOP, 0,false);
-        Cube.rotate(currentCube, LEFT, 1);
+        Cube.rotate(currentCube, LEFT, ROTATE_IZQ);
+        break;
+      case COL_LEFT_DOWN:
+        tmp = Cube.getColumn(currentCube, FRONT, 0);
+        Cube.setColumn(currentCube, Cube.getColumn(currentCube, TOP, 0), FRONT, 0, false);
+        Cube.setColumn(currentCube, Cube.getColumn(currentCube, BACK, 2), TOP, 0, true);
+        Cube.setColumn(currentCube, Cube.getColumn(currentCube, BOTTOM, 0), BACK, 2, true);
+        Cube.setColumn(currentCube, tmp, BOTTOM, 0, false);
+        Cube.rotate(currentCube, LEFT, ROTATE_DER);
         break;
       case COL_RIGHT_UP:
         tmp = Cube.getColumn(currentCube, FRONT, 2);
@@ -130,7 +189,15 @@ class Cube implements Constants, Comparator<Cube> {
         Cube.setColumn(currentCube, Cube.getColumn(currentCube, BACK, 0), BOTTOM, 2, true);
         Cube.setColumn(currentCube, Cube.getColumn(currentCube, TOP, 2), BACK, 0, true);
         Cube.setColumn(currentCube, tmp, TOP, 2, false);
-        Cube.rotate(currentCube, RIGHT, 1);
+        Cube.rotate(currentCube, RIGHT, ROTATE_DER);
+        break;
+      case COL_RIGHT_DOWN:
+        tmp = Cube.getColumn(currentCube, FRONT, 2);
+        Cube.setColumn(currentCube, Cube.getColumn(currentCube, TOP, 2), FRONT, 2, false);
+        Cube.setColumn(currentCube, Cube.getColumn(currentCube, BACK, 0), TOP, 2, true);
+        Cube.setColumn(currentCube, Cube.getColumn(currentCube, BOTTOM, 2), BACK, 0, true);
+        Cube.setColumn(currentCube, tmp, BOTTOM, 2, false);
+        Cube.rotate(currentCube, RIGHT, ROTATE_IZQ);
         break;
       default:
         break;

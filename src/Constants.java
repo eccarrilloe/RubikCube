@@ -44,8 +44,20 @@ interface Constants {
   public static final int ROTATE_BACK_DER  = 2;
   public static final int ROW_TOP_DER      = 3;
   public static final int ROW_BOTTOM_DER   = 4;
-  public static final int COL_LEFT_UP     = 5;
-  public static final int COL_RIGHT_UP    = 6;
+  public static final int COL_LEFT_UP      = 5;
+  public static final int COL_RIGHT_UP     = 6;
+
+  // Inverse operations (7-12)
+  public static final int ROTATE_FRONT_IZQ  = 7;
+  public static final int ROTATE_BACK_IZQ   = 8;
+  public static final int ROW_TOP_IZQ       = 9;
+  public static final int ROW_BOTTOM_IZQ    = 10;
+  public static final int COL_LEFT_DOWN     = 11;
+  public static final int COL_RIGHT_DOWN    = 12;
+
+  // Rotate
+  public static final int ROTATE_DER = 1;
+  public static final int ROTATE_IZQ = 2;
 
   // Search
   public static final int SEARCH_DFS = 0;

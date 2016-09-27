@@ -10,9 +10,11 @@ class Operator implements Constants {
 
   public Cube cube;
   public int maxDepth;
+  public int maxNodesExpanded;
 
   public Operator() {
     this.maxDepth = 0;
+    this.maxNodesExpanded = 0;
     this.cube = new Cube();
   }
 
@@ -35,24 +37,30 @@ class Operator implements Constants {
   }
 
   private void assembleDFS() {
-    ArrayList<Cube> states = new ArrayList<>(10000000);
+    ArrayList<Cube> states = new ArrayList<>((int) Math.pow(6, this.maxDepth));
     Stack<Cube> stack = new Stack<>();
     states.add(this.cube);
     stack.push(this.cube);
+    this.cube.depth = 0;
 
     while(! stack.empty()) {
         Cube current = stack.pop();
 
-        if (current.depth > this.maxDepth * 3)
+        if (current.depth > this.maxDepth)
           continue;
+
+        if (states.size() % 10000 == 0)
+          System.out.println("Nodos Expandidos: " + states.size());
 
         Iterator<Cube> childrens = this.getChildrens(current, false).iterator();
 
         while(childrens.hasNext()) {
           Cube child = childrens.next();
+          child.depth = current.depth + 1;
 
           if (this.validate(child)) {
               this.cube = child;
+              this.maxNodesExpanded = states.size();
               return;
           }
 
@@ -62,38 +70,38 @@ class Operator implements Constants {
           }
         }
     }
+    this.maxNodesExpanded = states.size();
   }
 
   private void assembleBFS() {
     Cube currentCube = this.cube;
     ArrayDeque<Cube> queue = new ArrayDeque<>();
-    Stack<Cube> visited = new Stack<>();
+    ArrayList<Cube> states = new ArrayList<>();
     int aux = 6, level = 0, elementsInLevel = 0;
     queue.add(currentCube);
     Cube current = new Cube();
-    while(!queue.isEmpty()){
+    while(! queue.isEmpty()) {
       current = queue.remove();
-      visited.add(current);
-      if(this.validate(current)){
+      states.add(current);
+      if(this.validate(current)) {
         this.cube = current;
         return;
-      }
-      else{
+      } else {
         ArrayList<Cube> childs = this.getChildrens(current, false);
         for (Cube c : childs ) {
           elementsInLevel++;
-          if(this.validate(c)){
+          if(this.validate(c)) {
             this.cube = c;
+            this.maxNodesExpanded = states.size();
             return;
           }
           else{
-      //    for (byte[] cubeInList : visited){
-            if(!visited.contains(c)){
+            if(! states.contains(c)) {
                 queue.add(c);
-                if(elementsInLevel==aux){
-                  aux*=6;
+                if(elementsInLevel == aux){
+                  aux *= 6;
                   level++;
-              }
+                }
             }
           }
         }
@@ -109,8 +117,6 @@ class Operator implements Constants {
 
     return true;
   }
-
-  //public boolean natural_failure = false;
 
   public void MY_DFS(Cube the_Cube, int my_depth){
      int the_limit  = (int) Math.pow(6, my_depth);
@@ -154,7 +160,7 @@ class Operator implements Constants {
 
       }
     }
-    }
+  }
 
   public void assembleIDS(){
       MY_DFS(this.cube, 15);
@@ -213,12 +219,12 @@ class Operator implements Constants {
 
   private ArrayList<Cube> getChildrens(Cube currentCube, boolean setHeuristic){
     ArrayList<Cube> tmp = new ArrayList<>();
-    tmp.add(Cube.operate(currentCube, ROTATE_FRONT_DER));
-    tmp.add(Cube.operate(currentCube, ROTATE_BACK_DER));
-    tmp.add(Cube.operate(currentCube, ROW_TOP_DER));
-    tmp.add(Cube.operate(currentCube, ROW_BOTTOM_DER));
-    tmp.add(Cube.operate(currentCube, COL_LEFT_UP));
-    tmp.add(Cube.operate(currentCube, COL_RIGHT_UP));
+    tmp.add(Cube.operate(currentCube, ROTATE_FRONT_IZQ));
+    tmp.add(Cube.operate(currentCube, ROTATE_BACK_IZQ));
+    tmp.add(Cube.operate(currentCube, ROW_TOP_IZQ));
+    tmp.add(Cube.operate(currentCube, ROW_BOTTOM_IZQ));
+    tmp.add(Cube.operate(currentCube, COL_LEFT_DOWN));
+    tmp.add(Cube.operate(currentCube, COL_RIGHT_DOWN));
 
     if(setHeuristic){
       for (Cube c : tmp ) {
