@@ -78,32 +78,28 @@ class Operator implements Constants {
     byte[] current = new byte[54];
     while(!queue.isEmpty()){
       current = queue.remove();
-      try{
-          visited.add(current);
-      }catch(Exception e){
-        System.out.println("Memory out!");
-      }
+      visited.add(current);
       if(this.validate(current))
       return current;
       else{
         ArrayList<byte[]> childs = this.getChildrens(current);
-        elementsInLevel+=6;
         for (byte[] c : childs ) {
+          elementsInLevel++;
           if(this.validate(c))
           return c;
           else{
-          for (byte[] cubeInList : visited){
-            if(!compare(cubeInList, c)){
+      //    for (byte[] cubeInList : visited){
+            if(!visited.contains(c)){
                 queue.add(c);
                 if(elementsInLevel==aux){
                   aux*=6;
                   System.out.println("Level: " + level + " Queue size: " + queue.size() + " elementsInLevel: " + aux + " visited size: " + visited.size());
                   level++;
-                }
+
               }
             }
           }
-      //    if(queue.size()%1000==0) System.out.println("Queue size: " + queue.size() +" visited size: " + visited.size());
+          if(queue.size()%10000==0) System.out.println("Queue size: " + queue.size() +" visited size: " + visited.size());
 
         }
       }
@@ -368,8 +364,8 @@ class Operator implements Constants {
       if (i % 3 == 0) strCube += offset;
       strCube += this.getColorName(current[((BOTTOM * 9) + i)]) + " ";
     }
-
-    for (int w = 0; w < strCube.length(); w++){
+    System.out.println(strCube);
+  /*  for (int w = 0; w < strCube.length(); w++){
       char the_char = strCube.charAt(w);
       switch(the_char){
         case 'G':
@@ -395,7 +391,7 @@ class Operator implements Constants {
       }
 
     }
-
+*/
   }
 
 }

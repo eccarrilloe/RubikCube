@@ -3,7 +3,7 @@ class Main implements Constants {
   public static void main(String[] args) {
     Operator op = new Operator();
     op.printCube(op.cube);
-    op.disarm(2);
+    op.disarm(15);
     System.out.println("Disarmed Cube");
     op.printCube(op.cube);
     System.out.println("Solved Cube");
