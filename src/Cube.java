@@ -1,11 +1,13 @@
+import java.util.Comparator;
 
-class Cube implements Constants {
+class Cube implements Constants, Comparator<Cube> {
   public byte[] cube;
-  public int depth;
+  public int depth, heuristic;
 
   public Cube() {
     this.cube = new byte[54];
     this.depth = 0;
+    this.heuristic = 0;
 
     for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((FRONT * 9) + (i * 3) + j)]  = WHITE;
     for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) this.cube[((BACK * 9) + (i * 3) + j)]   = YELLOW;
@@ -134,6 +136,20 @@ class Cube implements Constants {
         break;
     }
     return currentCube;
+  }
+
+  public void setHeuristic(){
+    for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) if(this.cube[((FRONT * 9) + (i * 3) + j)] != WHITE) heuristic++;
+    for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) if(this.cube[((BACK * 9) + (i * 3) + j)]   != YELLOW) heuristic++;
+    for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) if(this.cube[((LEFT * 9) + (i * 3) + j)]   != BLUE) heuristic++;
+    for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) if(this.cube[((RIGHT * 9) + (i * 3) + j)]  != GREEN) heuristic++;
+    for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) if(this.cube[((TOP * 9) + (i * 3) + j)]    != RED) heuristic++;
+    for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++) if(this.cube[((BOTTOM * 9) + (i * 3) + j)] != ORANGE) heuristic++;
+  }
+
+  @Override
+  public int compare(Cube i, Cube y){
+      return i.heuristic - y.heuristic;      
   }
 
   public static String getColorName(byte color) {
