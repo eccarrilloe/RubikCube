@@ -2,6 +2,7 @@
 class Main implements Constants {
   public static void main(String[] args) {
 
+
     int searchType = SEARCH_DFS;
     try {
       switch (args[0].toLowerCase()) {

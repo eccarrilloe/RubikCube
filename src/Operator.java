@@ -3,6 +3,8 @@ import java.util.Stack;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
 import java.util.Iterator;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 class Operator implements Constants {
 
@@ -40,10 +42,11 @@ class Operator implements Constants {
 
     while(! stack.empty()) {
         Cube current = stack.pop();
+
         if (current.depth > this.maxDepth * 3)
           continue;
 
-        Iterator<Cube> childrens = this.getChildrens(current).iterator();
+        Iterator<Cube> childrens = this.getChildrens(current, false).iterator();
 
         while(childrens.hasNext()) {
           Cube child = childrens.next();
@@ -70,36 +73,29 @@ class Operator implements Constants {
     Cube current = new Cube();
     while(!queue.isEmpty()){
       current = queue.remove();
-      try{
-          visited.add(current);
-      }catch(Exception e){
-        System.out.println("Memory out!");
-      }
-      if(this.validate(current)) {
+      visited.add(current);
+      if(this.validate(current)){
         this.cube = current;
         return;
       }
-
       else{
-        ArrayList<Cube> childs = this.getChildrens(current);
-        elementsInLevel+=6;
+        ArrayList<Cube> childs = this.getChildrens(current, false);
         for (Cube c : childs ) {
-          if(this.validate(c)) {
+          elementsInLevel++;
+          if(this.validate(c)){
             this.cube = c;
             return;
-          } else {
-            for (Cube cubeInList : visited) {
-              if(! compare(cubeInList, c)){
-                  queue.add(c);
-                  if(elementsInLevel==aux){
-                    aux*=6;
-                    System.out.println("Level: " + level + " Queue size: " + queue.size() + " elementsInLevel: " + aux + " visited size: " + visited.size());
-                    level++;
-                  }
-                }
+          }
+          else{
+      //    for (byte[] cubeInList : visited){
+            if(!visited.contains(c)){
+                queue.add(c);
+                if(elementsInLevel==aux){
+                  aux*=6;
+                  level++;
               }
             }
-      //    if(queue.size()%1000==0) System.out.println("Queue size: " + queue.size() +" visited size: " + visited.size());
+          }
         }
       }
     }
@@ -140,7 +136,7 @@ class Operator implements Constants {
         break;
       }
       else{
-        ArrayList<Cube> children = getChildrens(current_Cube);
+        ArrayList<Cube> children = getChildrens(current_Cube, false);
         for(int x = 0; x < children.size(); x++){
             Cube current_Child = children.get(x);
             if(!visited.contains(current_Child)){
@@ -161,13 +157,39 @@ class Operator implements Constants {
     }
 
   public void assembleIDS(){
-
       MY_DFS(this.cube, 15);
 
   }
 
   private void assembleAST() {
+    Comparator<Cube> comparator = new Cube();
+    PriorityQueue<Cube> priorityQueue = new PriorityQueue<>(10, comparator);
+    ArrayList<Cube> visited = new ArrayList<>();
+    this.cube.setHeuristic();
+    priorityQueue.add(this.cube);
 
+    while(!priorityQueue.isEmpty()){
+      Cube currentCube = priorityQueue.remove();
+      visited.add(currentCube);
+      if(this.validate(currentCube)){
+        this.cube = currentCube;
+        return;
+      }
+      ArrayList<Cube> children = getChildrens(this.cube, true);
+      for (Cube c : children ) {
+        if(this.validate(c)){
+          this.cube = c;
+          return;
+        }
+        for(Cube visit : visited){
+          if(!compare(visit, c)){
+            //Cube.printCube(c);
+            //System.out.println("Heuristic: " + c.heuristic);
+            priorityQueue.add(c);
+          }break;
+        }
+      }
+    }
   }
 
   public boolean validate(Cube current){
@@ -189,7 +211,7 @@ class Operator implements Constants {
     return true;
   }
 
-  private ArrayList<Cube> getChildrens(Cube currentCube){
+  private ArrayList<Cube> getChildrens(Cube currentCube, boolean setHeuristic){
     ArrayList<Cube> tmp = new ArrayList<>();
     tmp.add(Cube.operate(currentCube, ROTATE_FRONT_DER));
     tmp.add(Cube.operate(currentCube, ROTATE_BACK_DER));
@@ -198,11 +220,12 @@ class Operator implements Constants {
     tmp.add(Cube.operate(currentCube, COL_LEFT_UP));
     tmp.add(Cube.operate(currentCube, COL_RIGHT_UP));
 
+    if(setHeuristic){
+      for (Cube c : tmp ) {
+          c.setHeuristic();
+      }
+    }
     return tmp;
   }
-
-
-
-
 
 }
